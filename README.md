@@ -46,4 +46,4 @@ Simply open `index.html` in any modern web browser to view the website.
 
 ## License
 
-See LICENSE file for details.
+MIT License - See LICENSE file for details.

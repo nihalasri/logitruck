@@ -82,22 +82,23 @@ document.querySelectorAll('.service-card').forEach(card => {
     observer.observe(card);
 });
 
-// Navbar background change on scroll
+// Combined scroll handler for navbar and navigation links
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
+    const scrollY = window.scrollY;
+    
+    // Navbar background change
+    if (scrollY > 100) {
         navbar.style.background = 'linear-gradient(135deg, #152a4d 0%, #1e3c72 100%)';
         navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
     } else {
         navbar.style.background = 'linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)';
         navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
     }
-});
-
-// Add active state to navigation links based on scroll position
-window.addEventListener('scroll', () => {
+    
+    // Update active navigation links
     const sections = document.querySelectorAll('section');
-    const scrollPosition = window.scrollY + 100;
+    const scrollPosition = scrollY + 100;
 
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
