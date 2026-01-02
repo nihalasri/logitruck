@@ -1,0 +1,83 @@
+@import 'tailwindcss';
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
+@theme {
+  /* Brand Colors */
+  --color-primary: #135bec;
+  --color-primary-hover: #2563eb;
+  --color-primary-active: #1d4ed8;
+
+  /* Backgrounds */
+  --color-background-light: #f6f6f8;
+  --color-background-dark: #101622;
+  
+  /* Surfaces */
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1e293b;
+  --color-surface-dark-light: #232f48;
+  
+  /* Specific UI Elements */
+  --color-panel-dark: #192233;
+  --color-border-dark: #232f48;
+  --color-card-dark: #1e293b;
+  --color-text-secondary: #92a4c9;
+
+  /* Fonts */
+  --font-display: "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+/* Base Styles for Premium Feel */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background-light);
+    color: #0f172a; /* Slate 900 */
+  }
+
+  :global(.dark) body {
+    background-color: var(--color-background-dark);
+    color: #ffffff;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1; /* Slate 300 */
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+:global(.dark) ::-webkit-scrollbar-thumb {
+  background-color: #334155; /* Slate 700 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8; /* Slate 400 */
+}
+
+:global(.dark) ::-webkit-scrollbar-thumb:hover {
+  background-color: #475569; /* Slate 600 */
+}
+
+/* Selection Color */
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
