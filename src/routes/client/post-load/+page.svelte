@@ -2,11 +2,27 @@
 
   import { goto } from '$app/navigation';
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+  import { loadsStore } from '$lib/stores/loads.js';
 
+  let pickup = $state('');
+  let dropoff = $state('');
+  let date = $state('');
+  let shipmentType = $state('pallets');
   let isSubmitted = $state(false);
 
   function handleSubmit(e) {
     if (e) e.preventDefault();
+    
+    const newLoad = {
+      id: `L-${Math.floor(1000 + Math.random() * 9000)}`,
+      route: `${pickup || 'Unknown'} → ${dropoff || 'Unknown'}`,
+      cargo: shipmentType.charAt(0).toUpperCase() + shipmentType.slice(1),
+      status: 'Pending',
+      date: date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    };
+
+    loadsStore.update(currentLoads => [newLoad, ...currentLoads]);
+    
     isSubmitted = true;
     setTimeout(() => {
       goto('/client/loads');
@@ -21,9 +37,9 @@
         <!-- Glassmorphism Section Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-2 text-sm font-medium text-slate-400">
-                <a class="hover:text-primary transition-colors" href="/client/dashboard">Infrastructure</a>
+                <a class="hover:text-primary transition-colors" href="/client/dashboard">Home</a>
                 <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                <span class="text-slate-900 font-bold">New Post</span>
+                <span class="text-slate-900 font-bold">New Shipment</span>
             </div>
             <div class="flex items-center gap-4">
                 <button class="text-slate-400 hover:text-slate-600 micro-interaction">
@@ -37,7 +53,7 @@
             <div class="max-w-4xl mx-auto px-6 py-12">
                 <div class="mb-12">
                     <h1 class="text-5xl font-black text-slate-900 tracking-tight leading-none mb-4">Post new shipment</h1>
-                    <p class="text-text-muted text-lg font-medium max-w-2xl leading-relaxed">Broadcast your requirements to our verified driver network. Precision matching starts here.</p>
+                    <p class="text-text-muted text-lg font-medium max-w-2xl leading-relaxed">Post your shipment details for our drivers. We'll help you find the best match.</p>
                 </div>
 
                 <form class="space-y-8" onsubmit={handleSubmit}>
@@ -47,8 +63,8 @@
                                 <span class="material-symbols-outlined font-bold">done_all</span>
                             </div>
                             <div>
-                                <p class="font-black text-lg leading-none">Shipment Transmitted</p>
-                                <p class="text-sm font-medium opacity-80">Syncing with carrier nodes... redirecting.</p>
+                                <p class="font-black text-lg leading-none">Shipment Posted</p>
+                                <p class="text-sm font-medium opacity-80">Looking for drivers... redirecting.</p>
                             </div>
                         </div>
                     {/if}
@@ -59,27 +75,27 @@
                             <div class="size-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
                                 <span class="material-symbols-outlined text-2xl">route</span>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Trajectory Nodes</h2>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Pickup & Drop-off</h2>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                             <div class="space-y-6">
                                 <label class="block">
                                     <div class="flex justify-between items-end mb-2">
-                                        <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Origin Point</span>
-                                        <button type="button" class="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Select Saved Node</button>
+                                        <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Pickup Area</span>
+                                        <button type="button" class="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Select Saved Location</button>
                                     </div>
                                     <div class="relative group">
                                         <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors">
                                             <span class="material-symbols-outlined text-[20px]">my_location</span>
                                         </div>
-                                        <input class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Pickup City or Zip" type="text"/>
+                                        <input bind:value={pickup} class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Pickup City or Zip" type="text"/>
                                     </div>
                                 </label>
                                 <div class="grid grid-cols-2 gap-4">
                                     <label class="block">
                                         <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Pickup Date</span>
-                                        <input class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" type="date"/>
+                                        <input bind:value={date} class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" type="date"/>
                                     </label>
                                     <label class="block">
                                         <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Preferred Window</span>
@@ -96,21 +112,21 @@
                             <div class="space-y-6">
                                 <label class="block">
                                     <div class="flex justify-between items-end mb-2">
-                                        <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Destination Node</span>
-                                        <button type="button" class="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Select Saved Node</button>
+                                        <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Drop-off Area</span>
+                                        <button type="button" class="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Select Saved Location</button>
                                     </div>
                                     <div class="relative group">
                                         <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors">
                                             <span class="material-symbols-outlined text-[20px]">location_on</span>
                                         </div>
-                                        <input class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Drop-off City or Zip" type="text"/>
+                                        <input bind:value={dropoff} class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Drop-off City or Zip" type="text"/>
                                     </div>
                                 </label>
                                 <label class="block">
-                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Egress Points (Multi-stop)</span>
+                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Extra Stops</span>
                                     <button type="button" class="w-full py-4 rounded-2xl bg-slate-50 border-2 border-dashed border-slate-200 text-xs font-black text-slate-400 hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
                                         <span class="material-symbols-outlined text-[18px]">add_location_alt</span>
-                                        Add Delivery Node
+                                        Add Stop
                                     </button>
                                 </label>
                             </div>
@@ -123,11 +139,11 @@
                             <div class="size-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
                                 <span class="material-symbols-outlined text-2xl">dataset</span>
                             </div>
-                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Technical Specs</h2>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Load Details</h2>
                         </div>
 
                         <div class="mb-10">
-                            <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Service Modality</span>
+                            <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">Service Type</span>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 {#each ['Intra-city', 'Inter-city', 'Packers', 'Enterprise'] as cat}
                                 <label class="group cursor-pointer">
@@ -143,7 +159,7 @@
                         <div class="space-y-10">
                             <div>
                                 <div class="flex items-center gap-3 mb-4">
-                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Asset Class Selection</span>
+                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Choose a Vehicle</span>
                                     <div class="px-2 py-0.5 rounded-full bg-primary/5 border border-primary/10 text-[8px] font-black uppercase text-primary animate-pulse">AI Suggested</div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -173,15 +189,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <label class="block">
                                     <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Shipment Type</span>
-                                    <select class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 outline-none">
+                                    <select bind:value={shipmentType} class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 outline-none">
                                         <option value="pallets">Standard Pallets</option>
                                         <option value="container">FCL Container</option>
-                                        <option value="machinery">Heavy Assets</option>
+                                        <option value="machinery">Large Machinery</option>
                                         <option value="fragile">Fragile Goods (Add-on Protection)</option>
                                     </select>
                                 </label>
                                 <div class="block">
-                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Dynamic Fare Comparison</span>
+                                    <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Check Prices</span>
                                     <div class="p-4 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
                                         <div class="flex items-center gap-3">
                                             <span class="material-symbols-outlined text-emerald-400">trending_down</span>
@@ -193,7 +209,7 @@
                             </div>
 
                             <label class="block">
-                                <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Custom Operational Notes & Instructions</span>
+                                <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Driver Instructions</span>
                                 <textarea class="w-full px-6 py-4 rounded-[2rem] bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner h-32 resize-none" placeholder="e.g. 'Handle with extreme care', 'Call 10 mins before arrival', 'Gate code: 1234'"></textarea>
                             </label>
                         </div>
@@ -235,16 +251,16 @@
                     <!-- Footer Action Control -->
                     <div class="pt-8 flex items-center justify-between border-t border-slate-100 mt-12">
                         <div class="hidden sm:block">
-                            <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Budgetary Guidance</span>
+                            <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Estimated Cost</span>
                             <div class="flex items-baseline gap-2">
                                 <span class="text-3xl font-black text-slate-900">$420.00</span>
-                                <span class="text-xs font-bold text-slate-400">Estimated Target</span>
+                                <span class="text-xs font-bold text-slate-400">Guide Price</span>
                             </div>
                         </div>
                         <div class="flex gap-4">
                             <button type="button" class="px-10 py-5 rounded-[2rem] bg-white border border-slate-200 text-sm font-black hover:bg-slate-50 transition-all micro-interaction">Discard</button>
                             <button type="submit" class="px-12 py-5 rounded-[2rem] bg-primary text-white text-sm font-black shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95 disabled:opacity-50" disabled={isSubmitted}>
-                                {isSubmitted ? 'Broadcasting...' : 'Post Shipment'}
+                                {isSubmitted ? 'Posting...' : 'Post Shipment'}
                             </button>
                         </div>
                     </div>

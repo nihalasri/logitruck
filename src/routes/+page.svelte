@@ -1,7 +1,8 @@
-<script>
+    <script>
 	import Navbar from '$lib/components/Navbar.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import favicon from '$lib/assets/favicon.svg';
+    import homepageHero from '$lib/assets/homepage_hero.png';
 
     let isOpen = $state(false);
 
@@ -14,19 +15,15 @@
     <Navbar />
 
     <main class="flex-grow pt-24 overflow-hidden relative">
-        <!-- Cinematic Background Video -->
+        <!-- Cinematic Background Image -->
         <div class="absolute top-0 left-0 w-full h-[850px] overflow-hidden pointer-events-none">
             <div class="absolute inset-0 bg-white/60 z-10"></div> <!-- Light Theme Overlay -->
             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10"></div>
-            <video 
-                autoplay 
-                muted 
-                loop 
-                playsinline 
-                class="w-full h-full object-cover grayscale opacity-20 scale-110"
-            >
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-world-map-with-moving-connecting-lines-2015-large.mp4" type="video/mp4">
-            </video>
+            <img 
+                src={homepageHero} 
+                alt="Global Logistics Network"
+                class="w-full h-full object-cover grayscale opacity-79 scale-140"
+            />
         </div>
 
         <!-- Premium Radial Lighting -->
@@ -37,10 +34,13 @@
 
         <!-- Hero Section -->
         <section class="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pt-12 pb-32">
+            <!-- Text Backdrop Glow -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-200/30 blur-[100px] -z-10 rounded-full pointer-events-none"></div>
+
             <div class="flex flex-col items-center text-center">
-                <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/50 backdrop-blur-xl px-4 py-1.5 text-xs font-bold text-primary mb-12 shadow-sm animate-fade-in micro-interaction">
+                <div class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-white/50 backdrop-blur-xl px-4 py-1.5 text-xs font-bold text-primary mb-10 shadow-sm animate-fade-in micro-interaction">
                     <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--color-primary)]"></span>
-                    THE FUTURE OF LOGISTICS IS HERE
+                    LOGISTICS MADE EASY
                 </div>
 
                 <h1 class="mx-auto max-w-5xl text-5xl font-black tracking-tight text-slate-900 sm:text-8xl mb-8 leading-[0.9] drop-shadow-sm">
@@ -49,7 +49,7 @@
                 </h1>
 
                 <p class="mx-auto max-w-2xl text-xl text-text-muted leading-relaxed mb-12 font-medium">
-                    The world's most intuitive logistics operating system. Book, track, and optimize your entire supply chain with clinical precision.
+                    Easy-to-use delivery system. Book and track your shipments easily.
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
@@ -90,17 +90,17 @@
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-end mb-24">
                     <div class="lg:col-span-2">
-                         <h2 class="text-primary font-black uppercase tracking-[0.2em] text-sm mb-4">Core Ecosystem</h2>
+                         <h2 class="text-primary font-black uppercase tracking-[0.2em] text-sm mb-4">How it works</h2>
                          <p class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-none">Built for scale, <br /> refined for speed.</p>
                     </div>
-                    <p class="text-lg text-text-muted font-medium lg:pb-2">Engineered to handle complex logistics at lightning speed while maintaining total transparency.</p>
+                    <p class="text-lg text-text-muted font-medium lg:pb-2">Made to handle all deliveries at fast speed while keeping everything clear.</p>
                 </div>
 
                 <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
                     {#each [
-                        { icon: 'location_searching', title: 'Precision Tracking', desc: 'Real-time GPS nodes update every 5 seconds for absolute certainty.' },
-                        { icon: 'auto_mode', title: 'Route Forge', desc: 'AI engine that crafts the most fuel-efficient routes in real-time.' },
-                        { icon: 'verified_user', title: 'Insurance Vault', desc: 'Every shipment is backed by our instant-verifying insurance network.' }
+                        { icon: 'location_searching', title: 'Live Tracking', desc: 'Real-time GPS updates every 5 seconds so you always know where it is.' },
+                        { icon: 'auto_mode', title: 'Smart Routes', desc: 'AI that finds the best and fastest routes for you.' },
+                        { icon: 'verified_user', title: 'Safe & Insured', desc: 'Every shipment is safe and covered by our insurance network.' }
                     ] as feature}
                     <div class="premium-card p-10 group micro-interaction">
                         <div class="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-inner shadow-primary/5 transition-transform group-hover:scale-110 group-hover:rotate-3">
@@ -120,11 +120,11 @@
              <div class="absolute inset-0 bg-primary/[0.02]"></div>
              
              <div class="text-center relative z-10 px-6">
-                <h2 class="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tighter">Ready to evolve?</h2>
+                <h2 class="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tighter">Ready to start?</h2>
                 <p class="mx-auto max-w-xl text-xl text-text-muted mb-12 font-medium">
-                    Join the global logistics elite. Deploy LogiPro in under 10 minutes.
+                    Join many others using LogiPro. Start using it in under 10 minutes.
                 </p>
-                <a href="/login" class="inline-flex h-16 items-center px-12 rounded-2xl bg-slate-900 text-white font-black text-lg hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-slate-400/30">
+                <a href="/signup" class="inline-flex h-16 items-center px-12 rounded-2xl bg-slate-900 text-white font-black text-lg hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-slate-400/30">
                     Get started today
                 </a>
              </div>

@@ -8,15 +8,15 @@
                     </div>
                     <span class="text-xl font-black tracking-tight text-slate-900 font-display">LogiPro</span>
                 </a>
-                <p class="text-sm text-slate-500 font-medium leading-relaxed">The global standard for next-generation logistics and supply chain intelligence.</p>
+                <p class="text-sm text-slate-500 font-medium leading-relaxed">Simple and smart logistics for everyone.</p>
             </div>
             
             <div>
                 <h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Platform</h4>
                 <div class="flex flex-col gap-4 text-sm font-bold text-slate-600">
-                    <a href="/client/dashboard" class="hover:text-primary transition-colors">Client Terminal</a>
-                    <a href="/driver/dashboard" class="hover:text-primary transition-colors">Carrier Hub</a>
-                    <a href="/#features" class="hover:text-primary transition-colors">Ecosystem</a>
+                    <a href="/client/dashboard" class="hover:text-primary transition-colors">Customer Page</a>
+                    <a href="/driver/dashboard" class="hover:text-primary transition-colors">Driver Page</a>
+                    <a href="/#features" class="hover:text-primary transition-colors">Features</a>
                 </div>
             </div>
 
@@ -24,8 +24,8 @@
                 <h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">Support</h4>
                 <div class="flex flex-col gap-4 text-sm font-bold text-slate-600">
                     <a href="/client/support" class="hover:text-primary transition-colors">Help Center</a>
-                    <a href="/contact" class="hover:text-primary transition-colors">Direct Comms</a>
-                    <a href="/legal" class="hover:text-primary transition-colors">Protocols</a>
+                    <a href="/contact" class="hover:text-primary transition-colors">Contact Us</a>
+                    <a href="/legal" class="hover:text-primary transition-colors">Terms & Rules</a>
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
         </div>
 
         <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">© 2026 LogiPro Global Systems. Ver 4.0.2</span>
+            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">© 2026 LogiPro. Ver 4.0.2</span>
             <div class="flex gap-8">
                 <a href="/legal/privacy" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">Privacy</a>
                 <a href="/legal/security" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">Security</a>

@@ -2,12 +2,24 @@
 
   import DriverSidebar from '$lib/components/DriverSidebar.svelte';
 
-  let loads = [
+  let originQuery = $state('');
+  let destQuery = $state('');
+
+  const allLoads = [
     { id: 'Ref #19384', origin: 'Chicago, IL', dest: 'Miami, FL', type: 'Reefer', weight: '42,000 lbs', dist: '1,300 miles', price: '$3,200', tag: 'Hot Load' },
     { id: 'Ref #88221', origin: 'Seattle, WA', dest: 'Portland, OR', type: 'Dry Van', weight: '12,000 lbs', dist: '180 miles', price: '$450', tag: 'Ending Soon' },
     { id: 'Ref #77321', origin: 'Austin, TX', dest: 'Dallas, TX', type: 'Flatbed', weight: '45,000 lbs', dist: '200 miles', price: '$600', tag: 'New' },
     { id: 'Ref #11294', origin: 'Denver, CO', dest: 'Phoenix, AZ', type: 'Dry Van', weight: '38,000 lbs', dist: '850 miles', price: '$1,900', tag: 'Open' }
   ];
+
+  let loads = $state([...allLoads]);
+
+  function handleSearch() {
+    loads = allLoads.filter(load => 
+      load.origin.toLowerCase().includes(originQuery.toLowerCase()) &&
+      load.dest.toLowerCase().includes(destQuery.toLowerCase())
+    );
+  }
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
@@ -41,20 +53,20 @@
                         <span class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Origin Node</span>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-300">location_on</span>
-                            <input type="text" placeholder="Specify Departure..." class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all" />
+                            <input bind:value={originQuery} type="text" placeholder="Specify Departure..." class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all" />
                         </div>
                     </div>
                     <div class="premium-card p-6">
                         <span class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-3">Destination Node</span>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-300">flag</span>
-                            <input type="text" placeholder="Specify Arrival..." class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all" />
+                            <input bind:value={destQuery} type="text" placeholder="Specify Arrival..." class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all" />
                         </div>
                     </div>
                     <div class="flex items-end">
-                        <button class="w-full h-[76px] bg-slate-900 text-white rounded-2xl font-black text-sm shadow-xl shadow-slate-200 micro-interaction flex items-center justify-center gap-3">
-                            <span class="material-symbols-outlined">filter_list</span>
-                            Execute Search
+                        <button onclick={handleSearch} class="w-full h-[76px] bg-slate-900 text-white rounded-2xl font-black text-sm shadow-xl shadow-slate-200 micro-interaction flex items-center justify-center gap-3 active:scale-95 transition-transform">
+                            <span class="material-symbols-outlined">search</span>
+                            Search
                         </button>
                     </div>
                 </div>

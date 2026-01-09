@@ -41,8 +41,8 @@
 
             <!-- Auth Buttons -->
             <div class="hidden md:flex items-center gap-4">
-                <a href="{base}/login" class="text-slate-600 px-5 py-2.5 rounded-xl text-sm font-black hover:text-primary transition-colors micro-interaction">Sign In</a>
-                <a href="{base}/login" class="bg-slate-900 text-white px-7 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 transition-all hover:scale-105 active:scale-95">Get Started</a>
+                <a href="{base}/login" class="text-slate-600 px-5 py-2.5 rounded-xl text-sm font-black hover:text-primary transition-colors micro-interaction">Log In</a>
+                <a href="{base}/signup" class="bg-slate-900 text-white px-7 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 transition-all hover:scale-105 active:scale-95">Get Started</a>
             </div>
 
             <!-- Mobile menu button -->
@@ -65,8 +65,8 @@
                     </a>
                 {/each}
                 <div class="pt-4 flex flex-col gap-3">
-                    <a href="{base}/login" class="w-full text-center py-4 rounded-2xl bg-slate-50 text-slate-900 font-black text-lg">Sign In</a>
-                    <a href="{base}/login" class="w-full text-center py-4 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20">Get Started</a>
+                    <a href="{base}/login" class="w-full text-center py-4 rounded-2xl bg-slate-50 text-slate-900 font-black text-lg">Log In</a>
+                    <a href="{base}/signup" class="w-full text-center py-4 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20">Get Started</a>
                 </div>
             </div>
         </div>

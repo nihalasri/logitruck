@@ -20,14 +20,14 @@
                 </a>
                 <div class="w-px h-6 bg-slate-200"></div>
                 <div>
-                    <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Command Center</h2>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Live Operational Matrix</p>
+                    <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Dashboard</h2>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Live Status</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-xl">
                     <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600">Active Duty</span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600">Working Now</span>
                 </div>
                 <button class="relative p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-primary transition-all micro-interaction">
                     <span class="material-symbols-outlined">notifications</span>
@@ -43,7 +43,7 @@
                     <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                         <div>
                             <div class="flex items-center gap-3 mb-2">
-                                <span class="bg-primary text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">Active Transit</span>
+                                <span class="bg-primary text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">Current Trip</span>
                                 <h3 class="text-xl font-black text-slate-900 tracking-tight leading-none">Load #L-8942</h3>
                             </div>
                             <div class="flex items-center gap-2 text-slate-500 text-[10px] font-black uppercase tracking-widest">
@@ -55,7 +55,7 @@
                         <button class="moving-border h-12 rounded-xl shadow-xl shadow-slate-200 micro-interaction">
                             <div class="moving-border-content px-6 py-3 gap-2">
                                 <span class="material-symbols-outlined text-[18px]">satellite_alt</span>
-                                <span class="text-slate-900 font-black text-xs">Sync Telemetry</span>
+                                <span class="text-slate-900 font-black text-xs">Update Location</span>
                             </div>
                         </button>
                     </div>
@@ -71,7 +71,7 @@
                                         <span class="material-symbols-outlined text-slate-400 text-[18px]">share_location</span>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Egress Point</p>
+                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Pickup</p>
                                         <p class="text-lg font-black text-slate-900 leading-none">Industrial Hub, IL</p>
                                         <p class="text-[10px] font-bold text-slate-500 mt-1 uppercase">Finalized: 08:30 UTC</p>
                                     </div>
@@ -81,7 +81,7 @@
                                         <span class="material-symbols-outlined text-white text-[18px]">flag</span>
                                     </div>
                                     <div>
-                                        <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-1 font-display">Ingress Target</p>
+                                        <p class="text-[10px] font-black text-primary uppercase tracking-widest mb-1 font-display">Drop-off</p>
                                         <p class="text-lg font-black text-slate-900 leading-none">Logistics Gate West, TX</p>
                                         <p class="text-[10px] font-bold text-slate-500 mt-1 uppercase">ETA: 14.5 Hours</p>
                                     </div>
@@ -91,7 +91,7 @@
                             <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
                                 <div class="flex justify-between items-end mb-3">
                                     <div>
-                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Transit Completion</p>
+                                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Trip Progress</p>
                                         <p class="text-2xl font-black text-slate-900 leading-none">724 km <span class="text-slate-400 text-sm">REMAINING</span></p>
                                     </div>
                                     <span class="text-primary font-black text-sm">62.8%</span>
@@ -108,7 +108,7 @@
                                 <div class="absolute inset-0 bg-primary/5 pointer-events-none"></div>
                                 <div class="absolute top-4 left-4 glass px-3 py-1.5 rounded-lg border border-white/50 flex items-center gap-2">
                                     <span class="size-2 rounded-full bg-primary animate-ping"></span>
-                                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-900">Live GPS Node</span>
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-slate-900">Live Location</span>
                                 </div>
                             </div>
                         </div>
@@ -122,17 +122,17 @@
                             <span class="material-symbols-outlined text-[160px] text-primary">payments</span>
                         </div>
                         <div class="relative z-10">
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Cycle Earnings</p>
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">This Month's Pay</p>
                             <h4 class="text-5xl font-black text-slate-900 mb-2 tracking-tighter tabular-nums">$4,821.50</h4>
                             <div class="flex items-center gap-2 text-emerald-600">
                                 <span class="material-symbols-outlined text-sm font-black text-emerald-500">trending_up</span>
-                                <span class="text-[10px] font-black uppercase tracking-widest">+18.4% Efficiency</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest">+18.4% Better Work</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="premium-card p-8 flex-1 bg-white border-slate-200">
-                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-6">Network Distribution</h4>
+                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-wider mb-6">Work Summary</h4>
                         <div class="flex items-end justify-between gap-3 h-40">
                             {#each [40, 65, 50, 85, 95, 35, 25] as height, i}
                                 <div class="flex-1 flex flex-col items-center gap-3 group">
@@ -158,16 +158,16 @@
                             <div class="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                                 <span class="material-symbols-outlined text-[20px]">gavel</span>
                             </div>
-                            Active Proposals
+                            Pending Jobs
                         </h3>
-                        <a href="/driver/proposals" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">Nexus View</a>
+                        <a href="/driver/proposals" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">See All</a>
                     </div>
                     
                     <div class="space-y-3">
                         {#each [
-                            { id: 'L-9921', route: 'Miami Node', rate: '$3.20', total: '$3,840', status: 'In Review', color: 'bg-blue-500' },
-                            { id: 'L-9844', route: 'Seattle Node', rate: '$2.95', total: '$6,195', status: 'Pending', color: 'bg-yellow-500' },
-                            { id: 'L-9550', route: 'Austin Node', rate: '$3.50', total: '$2,800', status: 'Outbid', color: 'bg-red-500' },
+                            { id: 'L-9921', route: 'Miami', rate: '$3.20', total: '$3,840', status: 'In Review', color: 'bg-blue-500' },
+                            { id: 'L-9844', route: 'Seattle', rate: '$2.95', total: '$6,195', status: 'Pending', color: 'bg-yellow-500' },
+                            { id: 'L-9550', route: 'Austin', rate: '$3.50', total: '$2,800', status: 'Outbid', color: 'bg-red-500' },
                         ] as bid}
                             <div class="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-100 hover:border-primary/20 transition-all cursor-pointer group">
                                 <div class="flex items-center gap-4">
@@ -176,7 +176,7 @@
                                     </div>
                                     <div>
                                         <p class="text-sm font-black text-slate-900 group-hover:text-primary transition-colors">{bid.id} • {bid.route}</p>
-                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{bid.rate}/km • Priority Dispatch</p>
+                                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{bid.rate}/km • Fast Job</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
@@ -193,8 +193,8 @@
                     <div class="relative z-10 h-full flex flex-col">
                         <div class="flex justify-between items-center mb-10">
                             <div>
-                                <h3 class="text-xl font-black tracking-tight leading-none mb-2 text-slate-900">Backhaul Optimization</h3>
-                                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest text-[10px]">AI Network Matching</p>
+                                <h3 class="text-xl font-black tracking-tight leading-none mb-2 text-slate-900">Suggested Return Jobs</h3>
+                                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest text-[10px]">AI Best Fits</p>
                             </div>
                             <div class="size-12 rounded-xl bg-primary shadow-lg shadow-primary/20 text-white flex items-center justify-center">
                                 <span class="material-symbols-outlined text-3xl font-black">bolt</span>
@@ -205,25 +205,25 @@
                             <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-all cursor-pointer border-l-4 border-l-primary flex flex-col justify-between">
                                 <div>
                                     <div class="flex justify-between mb-4">
-                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Node #1029</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Location #1029</span>
                                         <span class="text-[9px] font-black uppercase tracking-widest text-emerald-600">92% Match</span>
                                     </div>
-                                    <p class="text-sm font-black text-slate-900 mb-1">Dallas Node <span class="text-slate-400">→</span> Industrial Hub</p>
+                                    <p class="text-sm font-black text-slate-900 mb-1">Dallas <span class="text-slate-400">→</span> Industrial Hub</p>
                                     <p class="text-[10px] text-slate-500 font-bold uppercase">Dry Van • 18t</p>
                                 </div>
                                 <div class="mt-6 flex justify-between items-center text-slate-900">
                                     <span class="text-lg font-black">$2,900</span>
-                                    <span class="text-[9px] font-black text-primary uppercase tracking-widest">Secure Dispatch</span>
+                                    <span class="text-[9px] font-black text-primary uppercase tracking-widest">Take Job</span>
                                 </div>
                             </div>
 
                             <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:bg-slate-100 transition-all cursor-pointer flex flex-col justify-between">
                                 <div>
                                     <div class="flex justify-between mb-4">
-                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Node #1045</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Location #1045</span>
                                         <span class="text-[9px] font-black uppercase tracking-widest text-slate-500">Standard Match</span>
                                     </div>
-                                    <p class="text-sm font-black text-slate-900 mb-1">Dallas Node <span class="text-slate-400">→</span> Gateway South</p>
+                                    <p class="text-sm font-black text-slate-900 mb-1">Dallas <span class="text-slate-400">→</span> Gateway South</p>
                                     <p class="text-[10px] text-slate-500 font-bold uppercase">Reefer • 20t</p>
                                 </div>
                                 <div class="mt-6 flex justify-between items-center text-slate-900">

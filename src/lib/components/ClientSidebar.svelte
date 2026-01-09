@@ -31,7 +31,7 @@
                 <h1 class="text-slate-900 text-lg font-black leading-tight tracking-tight font-display">Logistics Inc.</h1>
                 <div class="flex items-center gap-1.5">
                     <span class="size-1.5 rounded-full bg-emerald-500"></span>
-                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Client Account</p>
+                    <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Customer</p>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@
             class="group flex items-center w-full gap-3.5 px-4 py-3 rounded-xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-300 micro-interaction"
         >
             <span class="material-symbols-outlined text-[24px] transition-transform group-hover:translate-x-1">logout</span>
-            <span class="text-sm font-black">Sign Out</span>
+            <span class="text-sm font-black">Log Out</span>
         </button>
     </div>
 </aside>

@@ -1,12 +1,9 @@
 <script>
 
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+  import { loadsStore } from '$lib/stores/loads.js';
 
-  let loads = [
-    { id: 'L-8942', route: 'Chicago, IL → Dallas, TX', cargo: 'Electronics', status: 'In Transit', date: 'Oct 24, 2026' },
-    { id: 'L-8941', route: 'New York, NY → Boston, MA', cargo: 'Furniture', status: 'Delivered', date: 'Oct 20, 2026' },
-    { id: 'L-8940', route: 'Atlanta, GA → Miami, FL', cargo: 'Produce', status: 'Pending', date: 'Oct 26, 2026' }
-  ];
+  let loads = $derived($loadsStore);
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
@@ -17,8 +14,8 @@
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div>
-                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Consignment Manifest</h2>
-                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total active nodes: {loads.length}</p>
+                <h2 class="text-2xl font-black text-slate-900 tracking-tight">My Shipments</h2>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Active shipments: {loads.length}</p>
             </div>
             <a href="/client/post-load" class="group relative flex items-center justify-center gap-3 bg-primary text-white px-6 py-3 rounded-xl font-bold transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95">
                 <span class="material-symbols-outlined text-[20px]">add_circle</span>
@@ -31,10 +28,10 @@
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Identity</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Trajectory</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Partner</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Live Status</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">ID</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Route</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Driver</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
                             <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Manage</th>
                         </tr>
                     </thead>
@@ -73,7 +70,7 @@
                                         {#if load.status === 'In Transit'}
                                             <a href="/client/tracking" class="text-[9px] font-black text-primary uppercase tracking-widest hover:underline flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-[14px]">share_location</span>
-                                                Real-time Sync
+                                                Track Now
                                             </a>
                                         {/if}
                                     </div>
