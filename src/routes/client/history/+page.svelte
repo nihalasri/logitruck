@@ -76,24 +76,24 @@
 
             <!-- Summary Deck -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 pb-12">
-                <div class="premium-card p-10 bg-slate-900 text-white relative overflow-hidden group">
-                    <div class="absolute -right-8 -bottom-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-700">
-                        <span class="material-symbols-outlined text-[160px]">insights</span>
+                <div class="premium-card p-10 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group">
+                    <div class="absolute -right-8 -bottom-8 opacity-100 group-hover:scale-110 transition-transform duration-700">
+                        <span class="material-symbols-outlined text-[160px] text-slate-50">insights</span>
                     </div>
                     <div class="relative z-10">
                         <h3 class="text-2xl font-black tracking-tight mb-2">Network Insights</h3>
-                        <p class="text-slate-400 text-sm font-medium mb-8 leading-relaxed">Your transit efficiency is 12% above market average this quarter.</p>
-                        <button class="px-6 py-3 rounded-xl bg-white text-slate-900 font-black text-xs micro-interaction">Visualize Analysis</button>
+                        <p class="text-slate-500 text-sm font-medium mb-8 leading-relaxed">Your transit efficiency is 12% above market average this quarter.</p>
+                        <button class="px-6 py-3 rounded-xl bg-slate-900 text-white font-black text-xs micro-interaction shadow-lg shadow-slate-200">Visualize Analysis</button>
                     </div>
                 </div>
-                <div class="premium-card p-10 bg-primary text-white relative overflow-hidden group shadow-2xl shadow-primary/20">
-                    <div class="absolute -right-8 -bottom-8 opacity-[0.05] group-hover:scale-110 transition-transform duration-700">
-                        <span class="material-symbols-outlined text-[160px]">history_edu</span>
+                <div class="premium-card p-10 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group">
+                    <div class="absolute -right-8 -bottom-8 opacity-100 group-hover:scale-110 transition-transform duration-700">
+                        <span class="material-symbols-outlined text-[160px] text-primary/5">history_edu</span>
                     </div>
                     <div class="relative z-10">
                         <h3 class="text-2xl font-black tracking-tight mb-2">Compliance Log</h3>
-                        <p class="text-blue-100 text-sm font-medium mb-8 leading-relaxed">All certificates and insurance verification nodes are synchronized.</p>
-                        <button class="px-6 py-3 rounded-xl bg-white/20 backdrop-blur-md text-white border border-white/20 font-black text-xs micro-interaction">Audit Protocols</button>
+                        <p class="text-slate-500 text-sm font-medium mb-8 leading-relaxed">All certificates and insurance verification nodes are synchronized.</p>
+                        <button class="px-6 py-3 rounded-xl bg-primary text-white font-black text-xs micro-interaction shadow-lg shadow-primary/20">Audit Protocols</button>
                     </div>
                 </div>
             </div>

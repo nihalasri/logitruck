@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
 
 	let name = $state('');
 	let email = $state('');
@@ -21,7 +22,7 @@
 
 		// Simulated signup delay
 		setTimeout(() => {
-			goto('/login');
+			goto(`${base}/login`);
 		}, 1000);
 	}
 </script>
@@ -64,7 +65,7 @@
     <!-- Signup Form Side -->
     <div class="flex-1 flex flex-col justify-center p-8 sm:p-20 relative bg-white">
         <div class="max-w-md w-full mx-auto">
-            <a href="/" class="flex items-center gap-2.5 mb-12 group inline-flex">
+            <a href="{base}/" class="flex items-center gap-2.5 mb-12 group inline-flex">
                 <div class="size-10 text-primary flex items-center justify-center bg-slate-50 rounded-xl border border-primary/5 transition-transform group-hover:scale-110">
                     <span class="material-symbols-outlined text-2xl font-black">deployed_code</span>
                 </div>
@@ -117,7 +118,7 @@
 
                 <div class="flex items-center gap-3 px-1 pt-2">
                     <input type="checkbox" id="terms" required class="size-4 rounded border-slate-300 text-primary focus:ring-primary" />
-                    <label for="terms" class="text-xs font-bold text-slate-500 cursor-pointer">I agree to the <a href="/terms" class="text-primary hover:underline">Terms & Conditions</a></label>
+                    <label for="terms" class="text-xs font-bold text-slate-500 cursor-pointer">I agree to the <a href="{base}/terms" class="text-primary hover:underline">Terms & Conditions</a></label>
                 </div>
 
                 <button type="submit" disabled={isLoading} class="moving-border w-full h-[60px] rounded-2xl shadow-2xl shadow-primary/20 micro-interaction mt-4 disabled:opacity-50">
@@ -134,7 +135,7 @@
 
             <div class="mt-10 pt-8 border-t border-slate-100">
                 <p class="text-center text-xs font-black text-slate-400 uppercase tracking-widest">
-                    Already have an account? <a href="/login" class="text-primary hover:underline">Sign in</a>
+                    Already have an account? <a href="{base}/login" class="text-primary hover:underline">Sign in</a>
                 </p>
             </div>
         </div>

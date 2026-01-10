@@ -1,6 +1,7 @@
 <script>
 
 	import { goto } from '$app/navigation';
+    import { base } from '$app/paths';
 
 	let email = $state('');
 	let password = $state('');
@@ -14,7 +15,7 @@
 
 		// Simulated login delay
 		setTimeout(() => {
-			goto('/');
+			goto(`${base}/`);
 		}, 800);
 	}
 </script>
@@ -57,7 +58,7 @@
     <!-- Login Form Side -->
     <div class="flex-1 flex flex-col justify-center p-8 sm:p-20 relative bg-white">
         <div class="max-w-md w-full mx-auto">
-            <a href="/" class="flex items-center gap-2.5 mb-16 group inline-flex">
+            <a href="{base}/" class="flex items-center gap-2.5 mb-16 group inline-flex">
                 <div class="size-10 text-primary flex items-center justify-center bg-slate-50 rounded-xl border border-primary/5 transition-transform group-hover:scale-110">
                     <span class="material-symbols-outlined text-2xl font-black">deployed_code</span>
                 </div>
@@ -97,7 +98,7 @@
                 <div class="space-y-2">
                     <div class="flex justify-between items-center px-1">
                         <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Password</span>
-                        <a href="/login/recovery" class="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Forgot Password?</a>
+                        <a href="{base}/login/recovery" class="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Forgot Password?</a>
                     </div>
                     <div class="relative group">
                         <span class="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-300 group-focus-within:text-primary transition-colors">encrypted</span>
@@ -124,7 +125,7 @@
 
             <div class="mt-12 pt-8 border-t border-slate-100">
                 <p class="text-center text-xs font-black text-slate-400 uppercase tracking-widest">
-                    Don't have an account? <a href="/signup" class="text-primary hover:underline">Sign up</a>
+                    Don't have an account? <a href="{base}/signup" class="text-primary hover:underline">Sign up</a>
                 </p>
             </div>
         </div>

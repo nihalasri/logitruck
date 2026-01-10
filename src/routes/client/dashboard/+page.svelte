@@ -183,8 +183,10 @@
                             </div>
                         </div>
                         <div class="premium-card p-8 bg-primary text-white overflow-hidden relative shadow-2xl shadow-primary/20">
-                            <div class="absolute -right-10 -bottom-10 opacity-10 rotate-12">
-                                <span class="material-symbols-outlined text-[200px]">shield</span>
+                            <div class="absolute -right-10 -bottom-10 opacity-20 rotate-12 pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-64 h-64 text-blue-300">
+                                    <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.352-.272-2.636-.759-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                                </svg>
                             </div>
                             <div class="relative z-10 flex flex-col h-full justify-between">
                                 <div>
@@ -199,6 +201,39 @@
                                     </div>
                                     <span class="text-xs font-bold font-display">1.2M+ Secured Loads</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sustainability Impact Tracker (New 2025 Feature) -->
+                    <div class="premium-card p-8 bg-gradient-to-r from-teal-900 to-emerald-900 text-white relative overflow-hidden group shadow-2xl shadow-emerald-900/20 mb-8">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=2074&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <div class="size-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-500/30">
+                                        <span class="material-symbols-outlined text-emerald-400">forest</span>
+                                    </div>
+                                    <p class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Sustainability Intelligence</p>
+                                </div>
+                                <h3 class="text-3xl font-black tracking-tight mb-2">Eco-Logistics Tracker</h3>
+                                <p class="text-emerald-100/80 text-sm font-medium leading-relaxed max-w-lg">Your supply chain has saved <span class="text-white font-bold">12,450 kg</span> of CO₂ this quarter. 34% of your loads were fulfilled by Electric Vehicle (EV) fleets.</p>
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-center">
+                                    <p class="text-3xl font-black text-emerald-400">856</p>
+                                    <p class="text-[9px] font-bold text-emerald-200 uppercase tracking-widest mt-1">Trees Planted</p>
+                                </div>
+                                <div class="h-10 w-px bg-white/10"></div>
+                                <div class="text-center">
+                                    <p class="text-3xl font-black text-emerald-400">A+</p>
+                                    <p class="text-[9px] font-bold text-emerald-200 uppercase tracking-widest mt-1">Green Score</p>
+                                </div>
+                                <div class="h-10 w-px bg-white/10"></div>
+                                <button class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-3 rounded-xl font-black text-xs micro-interaction transition-all shadow-lg shadow-emerald-500/20">
+                                    <span class="material-symbols-outlined text-[18px]">volunteer_activism</span>
+                                    Offset Carbon
+                                </button>
                             </div>
                         </div>
                     </div>

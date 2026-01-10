@@ -4,7 +4,33 @@
   import { loadsStore } from '$lib/stores/loads.js';
 
   let loads = $derived($loadsStore);
+  let activeMenuId = $state(null);
+
+  function toggleMenu(id) {
+      if (activeMenuId === id) {
+          activeMenuId = null;
+      } else {
+          activeMenuId = id;
+      }
+  }
+
+  function handleMenuAction(action, load) {
+      console.log(`Action ${action} on load ${load.id}`);
+      activeMenuId = null;
+      if (action === 'track' && load.status === 'In Transit') {
+          // Navigate logic or handled by link
+      }
+  }
+
+  function handleBackdropClick() {
+      activeMenuId = null;
+  }
 </script>
+
+<!-- Backdrop for closing menus -->
+{#if activeMenuId}
+    <div class="fixed inset-0 z-30 cursor-default" onclick={handleBackdropClick} role="button" tabindex="0" onkeydown={e => e.key === 'Escape' && handleBackdropClick()}></div>
+{/if}
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
     <ClientSidebar activePage="my loads" />
@@ -24,20 +50,20 @@
         </header>
 
         <div class="flex-1 overflow-y-auto p-8 bg-[radial-gradient(35%_35%_at_50%_0%,rgba(29,78,216,0.02)_0%,transparent_100%)]">
-            <div class="premium-card overflow-hidden">
+            <div class="premium-card overflow-visible">
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">ID</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Route</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Driver</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
-                            <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Manage</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">ID</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Route</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Driver</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Status</th>
+                            <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-500">Manage</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
                         {#each loads as load}
-                            <tr class="hover:bg-slate-50/50 transition-all cursor-pointer group">
+                            <tr class="hover:bg-slate-50/50 transition-all group relative {activeMenuId === load.id ? 'z-50' : 'z-0'}">
                                 <td class="px-8 py-6">
                                     <div class="flex flex-col">
                                         <span class="font-black text-primary tracking-tighter">{load.id}</span>
@@ -76,9 +102,44 @@
                                     </div>
                                 </td>
                                 <td class="px-8 py-6 text-right">
-                                    <button class="p-2.5 rounded-xl text-slate-300 hover:text-primary hover:bg-primary/5 transition-all micro-interaction">
-                                        <span class="material-symbols-outlined text-[20px]">more_horiz</span>
-                                    </button>
+                                    <div class="relative z-50 flex justify-end">
+                                        <button 
+                                            onclick={() => toggleMenu(load.id)}
+                                            class="size-8 rounded-lg border border-slate-200 text-slate-400 hover:text-primary hover:bg-slate-50 hover:border-slate-300 flex items-center justify-center transition-all {activeMenuId === load.id ? 'bg-slate-50 text-primary border-slate-300' : ''}"
+                                        >
+                                            <span class="material-symbols-outlined text-lg">more_horiz</span>
+                                        </button>
+
+                                        {#if activeMenuId === load.id}
+                                            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden z-40 animate-scale-up origin-top-right text-left">
+                                                <div class="p-1">
+                                                    {#if load.status === 'In Transit'}
+                                                        <a href="/client/tracking" class="w-full text-left px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+                                                            <span class="material-symbols-outlined text-sm">share_location</span>
+                                                            Track Live
+                                                        </a>
+                                                    {/if}
+                                                    <button onclick={() => handleMenuAction('details', load)} class="w-full text-left px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span class="material-symbols-outlined text-sm">visibility</span>
+                                                        View Details
+                                                    </button>
+                                                    <button onclick={() => handleMenuAction('docs', load)} class="w-full text-left px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span class="material-symbols-outlined text-sm">description</span>
+                                                        Documents
+                                                    </button>
+                                                    <div class="h-px bg-slate-100 my-1"></div>
+                                                    <button onclick={() => handleMenuAction('duplicate', load)} class="w-full text-left px-3 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span class="material-symbols-outlined text-sm">content_copy</span>
+                                                        Duplicate Load
+                                                    </button>
+                                                    <button onclick={() => handleMenuAction('cancel', load)} class="w-full text-left px-3 py-2 text-xs font-bold text-red-500 hover:bg-red-50 rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span class="material-symbols-outlined text-sm">cancel</span>
+                                                        Cancel Shipment
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        {/if}
+                                    </div>
                                 </td>
                             </tr>
                         {/each}

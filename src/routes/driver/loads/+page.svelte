@@ -1,6 +1,7 @@
 <script>
 
   import DriverSidebar from '$lib/components/DriverSidebar.svelte';
+  import { activeJob } from '$lib/stores/job.js';
 
   let originQuery = $state('');
   let destQuery = $state('');
@@ -13,12 +14,39 @@
   ];
 
   let loads = $state([...allLoads]);
+  let showConfirmation = $state(false);
+  let showSuccess = $state(false);
+  let selectedLoad = $state(null);
 
   function handleSearch() {
     loads = allLoads.filter(load => 
       load.origin.toLowerCase().includes(originQuery.toLowerCase()) &&
       load.dest.toLowerCase().includes(destQuery.toLowerCase())
     );
+  }
+
+  function handlePickup(load) {
+      selectedLoad = load;
+      showConfirmation = true;
+  }
+
+  function confirmPickup() {
+      if (selectedLoad) {
+          activeJob.set(selectedLoad);
+          loads = loads.filter(l => l.id !== selectedLoad.id);
+          showConfirmation = false;
+          showSuccess = true;
+          selectedLoad = null;
+      }
+  }
+
+  function cancelPickup() {
+      showConfirmation = false;
+      selectedLoad = null;
+  }
+
+  function handleInspect(load) {
+      alert(`Manifest Details:\nID: ${load.id}\nType: ${load.type}\nDistance: ${load.dist}\n\nFull manifest document would open here.`);
   }
 </script>
 
@@ -118,12 +146,8 @@
                             </div>
 
                             <div class="grid grid-cols-2 gap-4">
-                                <button class="moving-border h-12 rounded-full shadow-lg shadow-slate-200 micro-interaction">
-                                    <div class="moving-border-content px-6 py-2">
-                                        <span class="text-slate-900 font-black text-sm">Pick up load</span>
-                                    </div>
-                                </button>
-                                <button class="py-4 bg-white border border-slate-200 text-slate-900 rounded-xl font-black text-xs hover:bg-slate-50 transition-all micro-interaction">Inspect Manifest</button>
+                                <button onclick={() => handlePickup(load)} class="py-4 bg-slate-900 text-white rounded-xl font-black text-xs shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all micro-interaction">Pick up load</button>
+                                <button onclick={() => handleInspect(load)} class="py-4 bg-white border border-slate-200 text-slate-900 rounded-xl font-black text-xs hover:bg-slate-50 transition-all micro-interaction">Inspect Manifest</button>
                             </div>
                         </div>
                     {/each}
@@ -144,4 +168,52 @@
             </div>
         </div>
     </main>
+
+    <!-- Confirmation Modal -->
+    {#if showConfirmation}
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in p-6">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl scale-100 animate-scale-up">
+            <h3 class="text-2xl font-black text-slate-900 mb-2">Confirm Pickup</h3>
+            <p class="text-slate-500 font-medium mb-8">
+                Are you sure you want to accept this load? This will be added to your schedule immediately.
+            </p>
+            
+            <div class="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-black uppercase tracking-widest text-slate-400">Load ID</span>
+                    <span class="text-sm font-black text-slate-900">{selectedLoad.id}</span>
+                </div>
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-black uppercase tracking-widest text-slate-400">Origin</span>
+                    <span class="text-sm font-black text-slate-900">{selectedLoad.origin}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs font-black uppercase tracking-widest text-slate-400">Payout</span>
+                    <span class="text-lg font-black text-emerald-600">{selectedLoad.price}</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick={cancelPickup} class="py-4 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition-colors">Cancel</button>
+                <button onclick={confirmPickup} class="py-4 rounded-xl font-black text-white bg-primary shadow-lg shadow-primary/30 hover:scale-105 transition-transform">Confirm Job</button>
+            </div>
+        </div>
+    </div>
+    {/if}
+
+    <!-- Success Modal -->
+     {#if showSuccess}
+     <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm animate-fade-in p-6">
+         <div class="bg-white rounded-3xl p-10 max-w-sm w-full shadow-2xl scale-100 animate-scale-up text-center">
+             <div class="size-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                 <span class="material-symbols-outlined text-4xl">check_circle</span>
+             </div>
+             <h3 class="text-2xl font-black text-slate-900 mb-2">Load Confirmed!</h3>
+             <p class="text-slate-500 font-medium mb-8">
+                 It has been added to your schedule.
+             </p>
+             <button onclick={() => showSuccess = false} class="w-full py-4 rounded-xl font-black text-white bg-slate-900 hover:scale-105 transition-transform">Get to work</button>
+         </div>
+     </div>
+     {/if}
 </div>
