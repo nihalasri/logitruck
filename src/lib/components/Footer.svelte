@@ -6,7 +6,7 @@
                     <div class="size-8 text-primary flex items-center justify-center bg-slate-50 rounded-lg border border-primary/5 transition-transform group-hover:scale-110">
                         <span class="material-symbols-outlined text-lg font-black">deployed_code</span>
                     </div>
-                    <span class="text-xl font-black tracking-tight text-slate-900 font-display">LogiPro</span>
+                    <span class="text-xl font-black tracking-tight text-slate-900 font-display">LogiTruck</span>
                 </a>
                 <p class="text-sm text-slate-500 font-medium leading-relaxed">Simple and smart logistics for everyone.</p>
             </div>
@@ -42,7 +42,7 @@
         </div>
 
         <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">© 2026 LogiPro. Ver 4.0.2</span>
+            <span class="text-xs font-black text-slate-400 uppercase tracking-widest">© 2026 LogiTruck. Ver 4.0.2</span>
             <div class="flex gap-8">
                 <a href="/legal/privacy" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">Privacy</a>
                 <a href="/legal/security" class="text-xs font-black text-slate-400 uppercase tracking-widest hover:text-primary transition-colors">Security</a>

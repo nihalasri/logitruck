@@ -5,7 +5,7 @@
     name: 'John Driver',
     rank: 'Elite Carrier',
     phone: '+1 (555) 0123-4567',
-    email: 'john.d@logipro.nexus'
+    email: 'john.d@logitruck.nexus'
   };
 
   let vehicle = {

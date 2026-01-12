@@ -69,7 +69,7 @@
                 <div class="size-10 text-primary flex items-center justify-center bg-slate-50 rounded-xl border border-primary/5 transition-transform group-hover:scale-110">
                     <span class="material-symbols-outlined text-2xl font-black">deployed_code</span>
                 </div>
-                <span class="text-2xl font-black tracking-tight text-slate-900 font-display transition-colors">LogiPro</span>
+                <span class="text-2xl font-black tracking-tight text-slate-900 font-display transition-colors">LogiTruck</span>
             </a>
 
             <div class="mb-10">

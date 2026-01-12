@@ -48,8 +48,8 @@
 
                         <div class="grid grid-cols-1 gap-8">
                             {#each [
-                                { icon: 'alternate_email', label: 'Email Us', val: 'ops@logipro.global' },
-                                { icon: 'perm_phone_msg', label: 'Call Us', val: '+1 (800) LOGI-PRO' },
+                                { icon: 'alternate_email', label: 'Email Us', val: 'ops@logitruck.global' },
+                                { icon: 'perm_phone_msg', label: 'Call Us', val: '+1 (800) LOGI-TRUCK' },
                                 { icon: 'location_on', label: 'Visit Us', val: 'Logistics Gate 01, Silicon Valley, CA' }
                             ] as item}
                                 <div class="flex items-center gap-6 group">

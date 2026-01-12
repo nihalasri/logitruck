@@ -156,7 +156,7 @@
                             <span class="bg-primary text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">Active Node</span>
                         </div>
                         <h4 class="text-2xl font-black text-slate-900 mb-2">Corporate Core</h4>
-                        <p class="text-slate-500 font-medium text-sm mb-8 leading-relaxed">Enhanced throughput with priority matching across the entire LogiPro network.</p>
+                        <p class="text-slate-500 font-medium text-sm mb-8 leading-relaxed">Enhanced throughput with priority matching across the entire LogiTruck network.</p>
                         <ul class="space-y-4 mb-10">
                             {#each ['5% Rebate on Long-haul', 'Priority Dispatch Access', 'Institutional Support', 'Enterprise Dashboard Sync'] as feature}
                             <li class="flex items-center gap-3">

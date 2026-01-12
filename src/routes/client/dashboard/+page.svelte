@@ -2,9 +2,72 @@
 
   import { goto } from '$app/navigation';
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+  import { onMount } from 'svelte';
+
+  let currentDate = '';
+  // Initial loading state or default values
+  let dashboardStats = [
+      { label: 'Live Shipments', val: '-', mod: '...', color: 'primary', icon: 'local_shipping' },
+      { label: 'Pending Bids', val: '-', mod: '...', color: 'blue', icon: 'gavel' },
+      { label: 'Scheduled', val: '-', mod: '...', color: 'indigo', icon: 'calendar_today' },
+      { label: 'Monthly Spend', val: '-', mod: '...', color: 'emerald', icon: 'payments' }
+  ];
+
+  function updateDate() {
+      const now = new Date();
+      const day = now.getDate();
+      const suffix = (d) => {
+          if (d > 3 && d < 21) return 'th';
+          switch (d % 10) {
+              case 1: return "st";
+              case 2: return "nd";
+              case 3: return "rd";
+              default: return "th";
+          }
+      };
+      
+      const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
+      const month = now.toLocaleDateString('en-US', { month: 'long' });
+      
+      currentDate = `${weekday}, ${month} ${day}${suffix(day)}`;
+  }
+
+  // Moved data arrays to script for reactivity
+  let liveShipments = [
+      { id: '#LD-4921', from: 'NYC', to: 'BOS', status: 'In Transit', driver: 'Mike R.', eta: '2h 15m' },
+      { id: '#LD-3382', from: 'LAX', to: 'SFO', status: 'Optimal', driver: 'Sarah J.', eta: '45m' },
+      { id: '#LD-9921', from: 'MIA', to: 'ATL', status: 'Scheduled', driver: 'Assigning...', eta: 'Pending' }
+  ];
+
+  let activeBids = [
+      { id: '#442', route: 'CHI → DET', carrier: 'FastTrack', bid: '$800', expires: '2h' },
+      { id: '#442', route: 'CHI → DET', carrier: "Mike's Trucking", bid: '$950', expires: '4h', lower: true }
+  ];
+
+  // Calculate stats based on data
+  $: dashboardStats = [
+      { label: 'Live Shipments', val: liveShipments.length.toString(), mod: '+2', color: 'primary', icon: 'local_shipping' },
+      { label: 'Pending Bids', val: activeBids.length.toString().padStart(2, '0'), mod: 'Action', color: 'blue', icon: 'gavel' },
+      { label: 'Scheduled', val: '03', mod: 'Next: 8h', color: 'indigo', icon: 'calendar_today' },
+      { label: 'Monthly Spend', val: '$14.2k', mod: '+12%', color: 'emerald', icon: 'payments' }
+  ];
+
+  onMount(() => {
+      updateDate();
+      const dateInterval = setInterval(updateDate, 60000);
+      return () => clearInterval(dateInterval);
+  });
 
   function handleLogout() {
       goto('/login');
+  }
+
+  function handleAcceptBid(id) {
+      alert(`Accepted bid for Load ${id}. Navigate to payment/confirmation.`);
+  }
+
+  function handleCounterBid(id) {
+      alert(`Opening counter-offer dialog for Load ${id}.`);
   }
 </script>
 
@@ -19,7 +82,7 @@
                 <button class="text-slate-600 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
-                <span class="text-xl font-black tracking-tight">LogiPro</span>
+                <span class="text-xl font-black tracking-tight">LogiTruck</span>
             </div>
             
             <div class="hidden lg:flex flex-1 max-w-xl">
@@ -59,18 +122,11 @@
                 <div class="flex flex-col">
                     <div class="flex items-center gap-3">
                         <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-none font-display">Dashboard</h2>
-                        <div class="px-3 py-1 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-[10px] font-black uppercase text-white shadow-lg shadow-yellow-200/50 flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-[14px]">military_tech</span>
-                            Gold Member
-                        </div>
+
                     </div>
                     <div class="flex items-center gap-4 mt-2">
-                        <p class="text-text-muted font-medium">Tuesday, January 2nd • System Status: <span class="text-emerald-500 font-bold">Good</span></p>
-                        <div class="h-4 w-px bg-slate-200"></div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="material-symbols-outlined text-primary text-[18px]">workspace_premium</span>
-                            <span class="text-xs font-black text-slate-900 tracking-tight">2,450 Reward Points</span>
-                        </div>
+<p class="text-text-muted font-medium">{currentDate} • System Status: <span class="text-emerald-500 font-bold">Good</span></p>
+
                     </div>
                 </div>
                 <a href="/client/post-load" class="group relative flex items-center justify-center gap-3 bg-primary text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 overflow-hidden">
@@ -82,21 +138,16 @@
 
             <!-- Stats Highlight Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {#each [
-                    { label: 'Live Shipments', val: '12', mod: '+2', color: 'primary', icon: 'local_shipping' },
-                    { label: 'Pending Bids', val: '05', mod: 'Action', color: 'blue', icon: 'gavel' },
-                    { label: 'Scheduled', val: '03', mod: 'Next: 8h', color: 'indigo', icon: 'calendar_today' },
-                    { label: 'Monthly Spend', val: '$14.2k', mod: '+12%', color: 'emerald', icon: 'payments' }
-                ] as stat}
+                {#each dashboardStats as stat}
                 <div class="premium-card p-6 flex flex-col justify-between h-40 group relative overflow-hidden">
-                    <div class="absolute -right-2 -top-2 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500 group-hover:scale-110">
-                        <span class="material-symbols-outlined text-8xl text-primary">{stat.icon}</span>
+                    <div class="absolute -right-2 -top-2 p-6 opacity-[0.1] group-hover:opacity-[0.2] transition-opacity duration-500 group-hover:scale-110">
+                        <span class="material-symbols-outlined text-8xl {stat.color === 'emerald' ? 'text-emerald-500' : stat.color === 'indigo' ? 'text-indigo-500' : stat.color === 'blue' ? 'text-blue-500' : 'text-primary'}">{stat.icon}</span>
                     </div>
                     <div>
-                        <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">{stat.label}</p>
+                        <p class="text-slate-600 text-xs font-black uppercase tracking-widest mb-1">{stat.label}</p>
                         <h3 class="text-3xl font-black text-slate-900 leading-none">{stat.val}</h3>
                     </div>
-                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-lg bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-500 group-hover:bg-primary/5 group-hover:text-primary transition-colors">
+                    <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1 rounded-lg bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-700 group-hover:bg-primary/5 group-hover:text-primary transition-colors">
                         <span class="size-1.5 rounded-full bg-primary/40"></span>
                         {stat.mod}
                     </div>
@@ -127,11 +178,7 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
-                                    {#each [
-                                        { id: '#LD-4921', from: 'NYC', to: 'BOS', status: 'In Transit', driver: 'Mike R.', eta: '2h 15m' },
-                                        { id: '#LD-3382', from: 'LAX', to: 'SFO', status: 'Optimal', driver: 'Sarah J.', eta: '45m' },
-                                        { id: '#LD-9921', from: 'MIA', to: 'ATL', status: 'Scheduled', driver: 'Assigning...', eta: 'Pending' }
-                                    ] as row}
+                                    {#each liveShipments as row}
                                     <tr class="group hover:bg-slate-50/80 transition-all cursor-pointer">
                                         <td class="px-6 py-5">
                                             <div class="flex flex-col">
@@ -145,7 +192,7 @@
                                                     <span class="text-xs font-black">{row.from}</span>
                                                     <span class="text-[9px] text-slate-400 uppercase">Origin</span>
                                                 </div>
-                                                <span class="material-symbols-outlined text-sm text-slate-200">east</span>
+                                                <span class="material-symbols-outlined text-sm text-slate-400">east</span>
                                                 <div class="flex flex-col">
                                                     <span class="text-xs font-black">{row.to}</span>
                                                     <span class="text-[9px] text-slate-400 uppercase">Dest</span>
@@ -179,27 +226,26 @@
                                     <h3 class="text-2xl font-black tracking-tight mb-2">Driver Network</h3>
                                     <p class="text-sm text-slate-500 font-medium">Global access to 50k+ verified truckers.</p>
                                 </div>
-                                <button class="w-fit bg-slate-900 text-white px-6 py-3 rounded-xl font-bold text-sm micro-interaction">Explore Fleet</button>
                             </div>
                         </div>
-                        <div class="premium-card p-8 bg-primary text-white overflow-hidden relative shadow-2xl shadow-primary/20">
-                            <div class="absolute -right-10 -bottom-10 opacity-20 rotate-12 pointer-events-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-64 h-64 text-blue-300">
+                        <div class="premium-card p-8 bg-white overflow-hidden relative shadow-2xl shadow-slate-200/50">
+                            <div class="absolute -right-10 -bottom-10 opacity-[0.05] rotate-12 pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-64 h-64 text-primary">
                                     <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.352-.272-2.636-.759-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                             <div class="relative z-10 flex flex-col h-full justify-between">
                                 <div>
-                                    <h3 class="text-2xl font-black tracking-tight mb-2">Safe Delivery™</h3>
-                                    <p class="text-blue-100 text-sm font-medium">Integrated protection for every shipment.</p>
+                                    <h3 class="text-2xl font-black tracking-tight mb-2 text-primary">Safe Delivery™</h3>
+                                    <p class="text-slate-500 text-sm font-medium">Integrated protection for every shipment.</p>
                                 </div>
                                 <div class="flex items-center gap-4 mt-8">
                                     <div class="flex -space-x-3">
                                         {#each [1,2,3] as i}
-                                        <div class="size-8 rounded-full border-2 border-primary bg-blue-400"></div>
+                                        <div class="size-8 rounded-full border-2 border-white bg-blue-100"></div>
                                         {/each}
                                     </div>
-                                    <span class="text-xs font-bold font-display">1.2M+ Secured Loads</span>
+                                    <span class="text-xs font-bold font-display text-slate-700">1.2M+ Secured Loads</span>
                                 </div>
                             </div>
                         </div>
@@ -217,57 +263,12 @@
                                     <p class="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400">Sustainability Intelligence</p>
                                 </div>
                                 <h3 class="text-3xl font-black tracking-tight mb-2">Eco-Logistics Tracker</h3>
-                                <p class="text-emerald-100/80 text-sm font-medium leading-relaxed max-w-lg">Your supply chain has saved <span class="text-white font-bold">12,450 kg</span> of CO₂ this quarter. 34% of your loads were fulfilled by Electric Vehicle (EV) fleets.</p>
+                                <p class="text-emerald-100/80 text-sm font-medium leading-relaxed max-w-lg">Your commitment to sustainable logistics is making a real difference! Continue prioritizing eco-friendly options to help build a greener, healthier future for everyone.</p>
                             </div>
-                            <div class="flex items-center gap-6">
-                                <div class="text-center">
-                                    <p class="text-3xl font-black text-emerald-400">856</p>
-                                    <p class="text-[9px] font-bold text-emerald-200 uppercase tracking-widest mt-1">Trees Planted</p>
-                                </div>
-                                <div class="h-10 w-px bg-white/10"></div>
-                                <div class="text-center">
-                                    <p class="text-3xl font-black text-emerald-400">A+</p>
-                                    <p class="text-[9px] font-bold text-emerald-200 uppercase tracking-widest mt-1">Green Score</p>
-                                </div>
-                                <div class="h-10 w-px bg-white/10"></div>
-                                <button class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-3 rounded-xl font-black text-xs micro-interaction transition-all shadow-lg shadow-emerald-500/20">
-                                    <span class="material-symbols-outlined text-[18px]">volunteer_activism</span>
-                                    Offset Carbon
-                                </button>
-                            </div>
-                        </div>
+
                     </div>
 
-                    <!-- Connectivity & Integration Matrix -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="p-6 rounded-3xl bg-emerald-50 border border-emerald-100 flex flex-col gap-4 group cursor-pointer hover:bg-emerald-100/50 transition-all">
-                            <div class="size-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-200">
-                                <span class="material-symbols-outlined">chat</span>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-slate-900">WhatsApp Booking</h4>
-                                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mt-1">WhatsApp Support</p>
-                            </div>
-                        </div>
-                        <div class="p-6 rounded-3xl bg-indigo-50 border border-indigo-100 flex flex-col gap-4 group cursor-pointer hover:bg-indigo-100/50 transition-all">
-                            <div class="size-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200">
-                                <span class="material-symbols-outlined">api</span>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-slate-900">Business API</h4>
-                                <p class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mt-1">Link Your App</p>
-                            </div>
-                        </div>
-                        <div class="p-6 rounded-3xl bg-slate-900 text-white flex flex-col gap-4 group cursor-pointer hover:bg-slate-800 transition-all">
-                            <div class="size-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
-                                <span class="material-symbols-outlined">sync_alt</span>
-                            </div>
-                            <div>
-                                <h4 class="font-black text-white">ERP/CRM Sync</h4>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Sync Your Data</p>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Sidebar Content Section -->
@@ -279,10 +280,7 @@
                             <span class="bg-primary/10 text-primary text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">5 Live</span>
                         </div>
                         <div class="p-4 space-y-4">
-                            {#each [
-                                { id: '#442', route: 'CHI → DET', carrier: 'FastTrack', bid: '$800', expires: '2h' },
-                                { id: '#442', route: 'CHI → DET', carrier: "Mike's Trucking", bid: '$950', expires: '4h', lower: true }
-                            ] as bid}
+                            {#each activeBids as bid}
                             <div class="p-5 rounded-2xl border border-slate-100 bg-white hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
                                 <div class="flex justify-between items-start mb-4">
                                     <div>
@@ -293,8 +291,8 @@
                                     <span class="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">{bid.bid}</span>
                                 </div>
                                 <div class="flex items-center gap-3 pt-2">
-                                    <button class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200">Accept</button>
-                                    <button class="flex-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-black py-3 rounded-xl hover:bg-slate-50 micro-interaction">Counter</button>
+                                    <button on:click={() => handleAcceptBid(bid.id)} class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200">Accept</button>
+                                    <button on:click={() => handleCounterBid(bid.id)} class="flex-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-black py-3 rounded-xl hover:bg-slate-50 micro-interaction">Counter</button>
                                 </div>
                             </div>
                             {/each}
@@ -318,21 +316,17 @@
                     </div>
 
                     <!-- Fast Support Widget -->
-                    <div class="premium-card p-8 bg-slate-900 text-white relative overflow-hidden group">
+                    <div class="premium-card p-8 bg-white relative overflow-hidden group">
                         <div class="absolute -right-8 -top-8 p-6 opacity-[0.05] group-hover:opacity-[0.1] group-hover:rotate-12 transition-all duration-700">
-                            <span class="material-symbols-outlined text-[160px]">support_agent</span>
+                            <span class="material-symbols-outlined text-[160px] text-slate-900">support_agent</span>
                         </div>
                         <div class="relative z-10">
-                            <h3 class="text-xl font-black tracking-tight mb-3">Priority Support</h3>
-                            <p class="text-slate-400 text-sm font-medium mb-8 leading-relaxed">Dedicated logistics manager sync available 24/7.</p>
+                            <h3 class="text-xl font-black tracking-tight mb-3 text-slate-900">Priority Support</h3>
+                            <p class="text-slate-600 text-sm font-medium mb-8 leading-relaxed">Dedicated logistics manager sync available 24/7.</p>
                             <div class="flex gap-3">
-                                <button class="flex-1 py-4 rounded-xl bg-white text-slate-900 font-black text-[11px] micro-interaction flex items-center justify-center gap-2">
+                                <button class="flex-1 py-4 rounded-xl bg-slate-900 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-slate-200">
                                     <span class="material-symbols-outlined text-[16px]">chat_bubble</span>
                                     Chat Now
-                                </button>
-                                <button class="py-4 px-4 rounded-xl bg-red-600 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-red-900/20">
-                                    <span class="material-symbols-outlined text-[16px] animate-pulse">sos</span>
-                                    Emergency
                                 </button>
                             </div>
                         </div>

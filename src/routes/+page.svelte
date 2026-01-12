@@ -117,7 +117,7 @@
              <div class="text-center relative z-10 px-6">
                 <h2 class="text-4xl md:text-6xl font-black text-slate-900 mb-8 tracking-tighter">Ready to start?</h2>
                 <p class="mx-auto max-w-xl text-xl text-text-muted mb-12 font-medium">
-                    Join many others using LogiPro. Start using it in under 10 minutes.
+                    Join many others using LogiTruck. Start using it in under 10 minutes.
                 </p>
                 <a href="{base}/signup" class="inline-flex h-16 items-center px-12 rounded-2xl bg-slate-900 text-white font-black text-lg hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 shadow-2xl shadow-slate-400/30">
                     Get started today

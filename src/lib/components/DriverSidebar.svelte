@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="flex flex-col overflow-hidden">
-                <h1 class="text-slate-900 text-lg font-black leading-tight tracking-tight font-display">LogiPro</h1>
+                <h1 class="text-slate-900 text-lg font-black leading-tight tracking-tight font-display">LogiTruck</h1>
                 <div class="flex items-center gap-1.5">
                     <span class="size-1.5 rounded-full bg-blue-500"></span>
                     <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider">Driver Hub</p>

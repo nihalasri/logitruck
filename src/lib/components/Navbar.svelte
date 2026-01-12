@@ -26,7 +26,7 @@
                         <span class="material-symbols-outlined font-black">deployed_code</span>
                     </div>
                 </div>
-                <span class="text-2xl font-black tracking-tight text-slate-900 font-display group-hover:text-primary transition-colors">LogiPro</span>
+                <span class="text-2xl font-black tracking-tight text-slate-900 font-display group-hover:text-primary transition-colors">LogiTruck</span>
             </a>
 
             <!-- Desktop Menu -->

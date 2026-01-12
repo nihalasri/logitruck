@@ -30,7 +30,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <label class="block">
                                 <span class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Corporate Identity</span>
-                                <input type="text" value="LogiPro Global" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" />
+                                <input type="text" value="LogiTruck Global" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" />
                             </label>
                             <label class="block">
                                 <span class="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Primary Communications Node</span>
@@ -141,7 +141,7 @@
                             </div>
                             <h3 class="text-xl font-black text-red-900">Entity Liquidation</h3>
                         </div>
-                        <p class="text-sm text-red-800/80 font-bold mb-8 leading-relaxed">This action permanently purges all operational history and consignment data from the LogiPro network. This cannot be reversed.</p>
+                        <p class="text-sm text-red-800/80 font-bold mb-8 leading-relaxed">This action permanently purges all operational history and consignment data from the LogiTruck network. This cannot be reversed.</p>
                         <button class="bg-red-600 text-white px-8 py-4 rounded-2xl font-black text-sm shadow-xl shadow-red-200 micro-interaction">Purge Entity</button>
                     </section>
                 </div>

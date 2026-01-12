@@ -10,7 +10,7 @@
             <div class="size-10 text-primary flex items-center justify-center bg-slate-50 rounded-xl border border-primary/5 transition-transform group-hover:scale-110">
                 <span class="material-symbols-outlined text-2xl font-black">deployed_code</span>
             </div>
-            <span class="text-2xl font-black tracking-tight text-slate-900 font-display group-hover:text-primary transition-colors">LogiPro</span>
+            <span class="text-2xl font-black tracking-tight text-slate-900 font-display group-hover:text-primary transition-colors">LogiTruck</span>
         </a>
         <div class="flex items-center gap-6">
             <div class="hidden md:flex items-center gap-8">
