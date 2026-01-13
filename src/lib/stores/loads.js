@@ -1,18 +1,33 @@
 import { writable } from 'svelte/store';
+import { supabase } from '$lib/supabase';
 
-const initialLoads = [
-    { id: 'L-8942', route: 'Chicago, IL → Dallas, TX', cargo: 'Electronics', status: 'In Transit', date: 'Oct 24, 2026' },
-    { id: 'L-8941', route: 'New York, NY → Boston, MA', cargo: 'Furniture', status: 'Delivered', date: 'Oct 20, 2026' },
-    { id: 'L-8940', route: 'Atlanta, GA → Miami, FL', cargo: 'Produce', status: 'Pending', date: 'Oct 26, 2026' }
-];
+export const loadsStore = writable([]);
 
-// Initialize from localStorage if available, otherwise use initialLoads
-const storedLoads = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('loads')) : null;
-export const loadsStore = writable(storedLoads || initialLoads);
+const loadLoads = async () => {
+    try {
+        const response = await fetch('/api/loads');
+        
+        if (!response.ok) {
+            throw new Error(`Error loading loads: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        loadsStore.set(data);
+    } catch (error) {
+        console.error('Error loading loads:', error);
+    }
+};
 
-// Subscribe to store changes to update localStorage
+// Initial load
 if (typeof window !== 'undefined') {
-    loadsStore.subscribe(value => {
-        localStorage.setItem('loads', JSON.stringify(value));
-    });
+    loadLoads();
+
+    // Subscribe to changes
+    supabase
+        .channel('loads')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'loads' }, payload => {
+            console.log('Change received!', payload);
+            loadLoads(); // Reload or handle granular updates
+        })
+        .subscribe();
 }

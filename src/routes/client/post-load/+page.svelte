@@ -2,7 +2,7 @@
 
   import { goto } from '$app/navigation';
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
-  import { loadsStore } from '$lib/stores/loads.js';
+  import { supabase } from '$lib/supabase';
 
   let pickup = $state('');
   let dropoff = $state('');
@@ -10,10 +10,13 @@
   let shipmentType = $state('pallets');
   let isSubmitted = $state(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     if (e) e.preventDefault();
     
     const newLoad = {
+    //   id: undefined, // Let Supabase handle ID generation if using uuid, or generate here if text.
+      // Keeping random ID logic for now if table isn't set up for auto-uuid, but ideally remove it. 
+      // I'll keep the client-generated ID to match previous behavior for now to be safe.
       id: `L-${Math.floor(1000 + Math.random() * 9000)}`,
       route: `${pickup || 'Unknown'} → ${dropoff || 'Unknown'}`,
       cargo: shipmentType.charAt(0).toUpperCase() + shipmentType.slice(1),
@@ -21,12 +24,28 @@
       date: date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     };
 
-    loadsStore.update(currentLoads => [newLoad, ...currentLoads]);
-    
-    isSubmitted = true;
-    setTimeout(() => {
-      goto('/client/loads');
-    }, 1500);
+    try {
+        const response = await fetch('/api/loads', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newLoad)
+        });
+
+        if (!response.ok) {
+            const result = await response.json();
+            throw new Error(result.error || 'Failed to post shipment');
+        }
+
+        isSubmitted = true;
+        setTimeout(() => {
+           goto('/client/loads');
+        }, 1500);
+    } catch (error) {
+        console.error('Error adding load:', error);
+        alert(`Failed to post shipment: ${error.message}`);
+    }
   }
 </script>
 
