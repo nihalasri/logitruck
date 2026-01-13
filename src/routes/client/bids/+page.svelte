@@ -1,10 +1,14 @@
 <script>
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+  import { onMount } from 'svelte';
+  import { page } from '$app/stores';
+  import { walletBalance } from '$lib/stores/wallet';
 
   let bids = $state([
     { id: 'B-101', loadId: 'L-8942', amount: '$450', driver: 'John Doe', driverId: 'DRV-8821', vehiclePlate: 'KA-05-MJ-8821', phone: '+1 (555) 0012', status: 'Accepted', date: 'Oct 24, 2026', verified: true, otp: '8521' },
     { id: 'B-102', loadId: 'L-8942', amount: '$420', driver: 'Jane Smith', driverId: 'DRV-9932', vehiclePlate: 'MH-02-DN-9932', phone: '+1 (555) 0013', status: 'Pending', date: 'Oct 24, 2026', verified: false, otp: null },
-    { id: 'B-103', loadId: 'L-8940', amount: '$580', driver: 'Mike Ross', driverId: 'DRV-1120', vehiclePlate: 'TN-09-AL-1120', phone: '+1 (555) 0014', status: 'Outbid', date: 'Oct 23, 2026', verified: false, otp: null }
+    { id: 'B-103', loadId: 'L-8940', amount: '$580', driver: 'Mike Ross', driverId: 'DRV-1120', vehiclePlate: 'TN-09-AL-1120', phone: '+1 (555) 0014', status: 'Outbid', date: 'Oct 23, 2026', verified: false, otp: null },
+    { id: '442', loadId: 'L-CHI-DET', amount: '$800', driver: 'FastTrack', driverId: 'FT-9921', vehiclePlate: 'IL-55-XY-3321', phone: '+1 (555) 8821', status: 'Pending', date: 'Today', verified: false, otp: null }
   ]);
 
   let selectedBid = $state(null);
@@ -15,6 +19,14 @@
   let paymentStep = $state('review'); // review, processing, success
   let generatedOtp = $state('');
   let currentOtp = $state('');
+
+  onMount(() => {
+      const verifyId = $page.url.searchParams.get('verify');
+      if (verifyId) {
+          const bid = bids.find(b => b.id === verifyId);
+          if (bid) handleVerify(bid);
+      }
+  });
 
   function handleVerify(bid) {
       selectedBid = bid;
@@ -61,8 +73,16 @@
   }
 
   function handlePayment() {
+      const amount = Number(selectedBid.amount.replace(/[^0-9.-]+/g,""));
+      
+      if ($walletBalance < amount) {
+          alert(`Insufficient balance ($${$walletBalance}). Please add funds to your wallet.`);
+          return;
+      }
+
       paymentStep = 'processing';
       setTimeout(() => {
+          $walletBalance -= amount;
           paymentStep = 'success';
           const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
           generatedOtp = newOtp;

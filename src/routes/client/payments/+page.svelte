@@ -1,12 +1,66 @@
 <script>
+    import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+    import { fade, fly } from 'svelte/transition';
+    import { walletBalance, formatCurrency } from '$lib/stores/wallet';
 
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+    let payments = [
+        { id: 'PAY-001', amount: '$1,200.00', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 24, 2026' },
+        { id: 'PAY-002', amount: '$450.00', method: 'Bank Transfer', status: 'Pending', date: 'Oct 25, 2026' },
+        { id: 'PAY-003', amount: '$300.00', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 05, 2026' },
+        { id: 'PAY-004', amount: '$2,150.00', method: 'Mastercard **** 8899', status: 'Completed', date: 'Sep 28, 2026' },
+        { id: 'PAY-005', amount: '$850.50', method: 'Wallet Balance', status: 'Completed', date: 'Sep 15, 2026' }
+    ];
 
-  let payments = [
-    { id: 'PAY-001', amount: '$1,200', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 24, 2026' },
-    { id: 'PAY-002', amount: '$450', method: 'Bank Transfer', status: 'Pending', date: 'Oct 25, 2026' },
-    { id: 'PAY-003', amount: '$300', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 05, 2026' }
-  ];
+    let showAddFundsModal = false;
+    let addAmount = '';
+    let isProcessing = false;
+    let promoCode = '';
+    let splitPaymentActive = false;
+
+    function handleAddFunds() {
+        if (!addAmount || isNaN(addAmount) || Number(addAmount) <= 0) return;
+        isProcessing = true;
+        
+        // Simulate API call
+        setTimeout(() => {
+            $walletBalance += Number(addAmount);
+            payments = [
+                { 
+                    id: `PAY-${Math.floor(Math.random() * 10000)}`, 
+                    amount: formatCurrency(addAmount), 
+                    method: 'Bank Transfer', 
+                    status: 'Completed', 
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) 
+                },
+                ...payments
+            ];
+            addAmount = '';
+            isProcessing = false;
+            showAddFundsModal = false;
+        }, 1500);
+    }
+
+    function exportData() {
+        const headers = ["ID", "Amount", "Method", "Status", "Date"];
+        const rows = payments.map(p => [p.id, p.amount, p.method, p.status, p.date]);
+        const csvContent = "data:text/csv;charset=utf-8," + 
+            [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+        
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "logitruck_transactions.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function applyPromo() {
+        if(promoCode.trim()) {
+            alert(`Promo code '${promoCode}' applied! discount will be reflected on next invoice.`);
+            promoCode = '';
+        }
+    }
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
@@ -19,7 +73,7 @@
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Financial Ledger</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Transaction audit trail</p>
             </div>
-            <button class="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 micro-interaction">
+            <button on:click={exportData} class="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 micro-interaction hover:bg-slate-800 transition-colors">
                 Export Data
             </button>
         </header>
@@ -41,6 +95,23 @@
                     </div>
                 </div>
 
+                <!-- Wallet Balance (Replaces Corporate Discount) -->
+                <div class="premium-card p-6 flex flex-col justify-between bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden shadow-xl shadow-blue-900/10 min-h-[160px] group">
+                    <div class="absolute -right-4 -bottom-4 opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-700">
+                        <span class="material-symbols-outlined text-8xl">account_balance_wallet</span>
+                    </div>
+                    <div class="relative z-10 flex flex-col h-full justify-between">
+                         <div>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-blue-100 mb-2">Available Balance</p>
+                            <h3 class="text-3xl font-black tracking-tight text-white">{formatCurrency($walletBalance)}</h3>
+
+                         </div>
+                         <button on:click={() => showAddFundsModal = true} class="w-fit mt-auto bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider backdrop-blur-sm border border-white/10 micro-interaction transition-all">
+                             + Add Funds
+                         </button>
+                    </div>
+                </div>
+
                 <!-- Reward Credits -->
                 <div class="premium-card p-6 flex flex-col justify-between bg-gradient-to-br from-emerald-500 to-teal-600 text-white relative overflow-hidden shadow-xl shadow-emerald-900/10 min-h-[160px] group">
                     <div class="absolute -right-4 -bottom-4 opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-700">
@@ -55,20 +126,6 @@
                     </div>
                 </div>
 
-                <!-- Corporate Discount -->
-                 <div class="premium-card p-6 flex flex-col justify-between bg-gradient-to-br from-blue-600 to-indigo-700 text-white relative overflow-hidden shadow-xl shadow-blue-900/10 min-h-[160px] group">
-                    <div class="absolute -right-4 -bottom-4 opacity-20 rotate-12 group-hover:scale-110 transition-transform duration-700">
-                        <span class="material-symbols-outlined text-8xl">verified_user</span>
-                    </div>
-                     <div class="relative z-10">
-                         <p class="text-[10px] font-black uppercase tracking-widest text-blue-100 mb-2">Corporate Discount</p>
-                         <h3 class="text-3xl font-black tracking-tight text-white">12% OFF</h3>
-                    </div>
-                     <div class="relative z-10 mt-auto flex items-center gap-2 text-[10px] font-bold text-blue-100">
-                        <span class="bg-white/20 px-2.5 py-1 rounded-md text-white backdrop-blur-sm border border-white/10 uppercase tracking-widest">Tier 1 Partner</span>
-                    </div>
-                </div>
-
                 <!-- Active Promo -->
                 <div class="premium-card p-6 bg-slate-900 text-white flex flex-col justify-between relative overflow-hidden min-h-[160px]">
                     <div class="absolute -right-4 -top-4 opacity-[0.1]">
@@ -77,8 +134,8 @@
                     <div class="relative z-10 w-full h-full flex flex-col justify-between">
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Active Promo</p>
                         <div class="flex items-center gap-2">
-                            <input type="text" placeholder="CODE" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-black uppercase placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary transition-all text-white"/>
-                            <button class="bg-primary hover:bg-primary-hover px-4 py-3 rounded-xl text-white transition-colors flex items-center justify-center shadow-lg shadow-primary/25">
+                            <input type="text" bind:value={promoCode} placeholder="CODE" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-black uppercase placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary transition-all text-white"/>
+                            <button on:click={applyPromo} class="bg-primary hover:bg-primary-hover px-4 py-3 rounded-xl text-white transition-colors flex items-center justify-center shadow-lg shadow-primary/25">
                                  <span class="material-symbols-outlined text-[18px]">check</span>
                             </button>
                         </div>
@@ -87,15 +144,16 @@
                 </div>
             </div>
 
+            <!-- Transactions Table -->
             <div class="premium-card overflow-hidden mb-10">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 border-b border-slate-100">
                         <tr>
                             <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Reference ID</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Magnitude</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Modality</th>
-                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">State</th>
-                            <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Documentation</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Amount</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Method</th>
+                            <th class="px-8 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                            <th class="px-8 py-5 text-right text-[10px] font-black uppercase tracking-widest text-slate-400">Invoice</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">
@@ -131,59 +189,115 @@
                 </table>
             </div>
 
-            <div class="p-6 bg-slate-900 text-white rounded-[2rem] flex items-center justify-between mb-10 relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent"></div>
-                <div class="relative z-10 flex items-center gap-6">
-                    <div class="size-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-primary">group_add</span>
-                    </div>
-                    <div>
-                        <p class="text-sm font-black tracking-tight">Split Payment Modal Active</p>
-                        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Enable to share fares with multiple entities for shared loads</p>
-                    </div>
-                </div>
-                <div class="relative z-10 size-12 rounded-full bg-slate-700 p-1 flex items-center justify-start cursor-pointer hover:bg-slate-600 transition-colors">
-                    <div class="size-10 rounded-full bg-white shadow-sm"></div>
-                </div>
-            </div>
-
-            <!-- Service Tiering -->
+            <!-- Payment Methods Management -->
             <div class="space-y-6 pb-12">
-                <h3 class="text-xl font-black tracking-tight text-slate-900">Service Architecture</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="premium-card p-10 bg-white relative overflow-hidden ring-2 ring-primary">
-                        <div class="absolute right-6 top-6">
-                            <span class="bg-primary text-white text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-primary/20">Active Node</span>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-black tracking-tight text-slate-900">Payment Methods</h3>
+                    <button class="text-primary text-xs font-black uppercase tracking-widest hover:text-primary-hover transition-colors flex items-center gap-1.5 border border-primary/20 px-3 py-1.5 rounded-lg hover:bg-primary/5">
+                        <span class="material-symbols-outlined text-[16px]">add</span>
+                        Add New
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Visa Card -->
+                    <div class="premium-card p-6 bg-white border border-slate-200 text-slate-900 relative overflow-hidden group">
+                         <div class="absolute -right-8 -top-8 p-6 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity">
+                            <span class="material-symbols-outlined text-[140px] text-slate-900">credit_card</span>
                         </div>
-                        <h4 class="text-2xl font-black text-slate-900 mb-2">Corporate Core</h4>
-                        <p class="text-slate-500 font-medium text-sm mb-8 leading-relaxed">Enhanced throughput with priority matching across the entire LogiTruck network.</p>
-                        <ul class="space-y-4 mb-10">
-                            {#each ['5% Rebate on Long-haul', 'Priority Dispatch Access', 'Institutional Support', 'Enterprise Dashboard Sync'] as feature}
-                            <li class="flex items-center gap-3">
-                                <div class="size-6 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-sm font-bold">check</span>
+                        <div class="relative z-10 flex flex-col h-full justify-between min-h-[160px]">
+                            <div class="flex justify-between items-start">
+                                <span class="bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest">Default</span>
+                                <span class="material-symbols-outlined text-2xl">contactless</span>
+                            </div>
+                            <div>
+                                <p class="font-mono text-xl tracking-widest mb-1 text-slate-900">**** **** **** 4242</p>
+                                <div class="flex justify-between items-end">
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] text-slate-400 uppercase tracking-widest">Card Holder</span>
+                                        <span class="text-xs font-bold text-slate-900">NATHAN WRIGHT</span>
+                                    </div>
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-[9px] text-slate-400 uppercase tracking-widest">Expires</span>
+                                        <span class="text-xs font-bold text-slate-900">09/28</span>
+                                    </div>
                                 </div>
-                                <span class="text-sm font-bold text-slate-600">{feature}</span>
-                            </li>
-                            {/each}
-                        </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="premium-card p-10 bg-slate-900 text-white relative overflow-hidden group">
-                        <!-- Glow -->
-                        <div class="absolute -right-20 -bottom-20 size-64 bg-primary/20 blur-[100px] rounded-full"></div>
-                        
-                        <div class="relative z-10">
-                            <h4 class="text-2xl font-black mb-2">Logistics API Pro</h4>
-                            <p class="text-slate-400 font-medium text-sm mb-8 leading-relaxed">Full programmatic access with unlimited webhook listeners and dedicated infrastructure.</p>
-                            <button class="w-full py-5 rounded-2xl bg-white text-slate-900 font-black text-sm micro-interaction shadow-2xl shadow-black/20">
-                                Upgrade to Enterprise
-                            </button>
-                            <p class="text-center mt-6 text-[10px] font-black text-primary uppercase tracking-[0.3em]">Institutional Grade</p>
+                    <!-- Mastercard Card -->
+                    <div class="premium-card p-6 bg-white border border-slate-100 relative overflow-hidden group hover:border-primary/20 transition-all">
+                        <div class="relative z-10 flex flex-col h-full justify-between min-h-[160px]">
+                            <div class="flex justify-between items-start">
+                                <div class="size-8 rounded bg-red-500/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-red-500">credit_card</span>
+                                </div>
+                                <button class="text-slate-400 hover:text-red-500 transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                </button>
+                            </div>
+                            <div>
+                                <p class="font-mono text-xl tracking-widest mb-1 text-slate-700">**** **** **** 8899</p>
+                                <div class="flex justify-between items-end">
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] text-slate-400 uppercase tracking-widest">Card Holder</span>
+                                        <span class="text-xs font-bold text-slate-900">NATHAN WRIGHT</span>
+                                    </div>
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-[9px] text-slate-400 uppercase tracking-widest">Expires</span>
+                                        <span class="text-xs font-bold text-slate-900">01/27</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Add New Placeholder -->
+                    <button class="premium-card p-6 border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center gap-3 text-slate-400 hover:border-primary/50 hover:bg-primary/5 hover:text-primary transition-all min-h-[160px]">
+                        <span class="material-symbols-outlined text-4xl">add_circle</span>
+                        <span class="text-xs font-black uppercase tracking-widest">Link New Method</span>
+                    </button>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Add Funds Modal -->
+    {#if showAddFundsModal}
+        <div class="fixed inset-0 z-50 flex items-center justify-center p-4" transition:fade>
+            <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" on:click={() => showAddFundsModal = false}></div>
+            <div class="bg-white w-full max-w-md rounded-3xl p-8 relative z-10 shadow-2xl flex flex-col items-center" transition:fly={{ y: 20 }}>
+                <div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-3xl text-primary">add_card</span>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900 mb-2">Add Funds</h3>
+                <p class="text-slate-500 text-sm text-center mb-8">Securely load your wallet using your saved payment method.</p>
+                
+                <div class="w-full space-y-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 mb-2 block">Amount ($)</label>
+                        <input 
+                            type="number" 
+                            bind:value={addAmount} 
+                            placeholder="Enter amount (e.g. 500)" 
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-4 text-lg font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-center"
+                        />
+                    </div>
+                </div>
+
+                <div class="w-full grid grid-cols-2 gap-3 mt-8">
+                    <button on:click={() => showAddFundsModal = false} class="py-4 rounded-xl text-slate-500 font-bold text-sm bg-slate-100 hover:bg-slate-200 transition-colors">Cancel</button>
+                    <button on:click={handleAddFunds} disabled={isProcessing} class="py-4 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                        {#if isProcessing}
+                            <div class="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
+                            Processing...
+                        {:else}
+                            Confirm Interest
+                        {/if}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
 </div>

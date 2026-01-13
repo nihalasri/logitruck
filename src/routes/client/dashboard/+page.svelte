@@ -1,16 +1,20 @@
 <script>
-
   import { goto } from '$app/navigation';
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
   import { onMount } from 'svelte';
+  import { fade } from 'svelte/transition';
+  import { walletBalance, formatCurrency } from '$lib/stores/wallet';
 
   let currentDate = '';
+  let showToast = false;
+  let toastMessage = '';
+
   // Initial loading state or default values
   let dashboardStats = [
       { label: 'Live Shipments', val: '-', mod: '...', color: 'primary', icon: 'local_shipping' },
       { label: 'Pending Bids', val: '-', mod: '...', color: 'blue', icon: 'gavel' },
       { label: 'Scheduled', val: '-', mod: '...', color: 'indigo', icon: 'calendar_today' },
-      { label: 'Monthly Spend', val: '-', mod: '...', color: 'emerald', icon: 'payments' }
+      { label: 'Wallet Balance', val: '-', mod: '...', color: 'emerald', icon: 'account_balance_wallet' }
   ];
 
   function updateDate() {
@@ -34,22 +38,24 @@
 
   // Moved data arrays to script for reactivity
   let liveShipments = [
-      { id: '#LD-4921', from: 'NYC', to: 'BOS', status: 'In Transit', driver: 'Mike R.', eta: '2h 15m' },
-      { id: '#LD-3382', from: 'LAX', to: 'SFO', status: 'Optimal', driver: 'Sarah J.', eta: '45m' },
-      { id: '#LD-9921', from: 'MIA', to: 'ATL', status: 'Scheduled', driver: 'Assigning...', eta: 'Pending' }
+      { id: '#LD-4921', from: 'NYC', to: 'BOS', status: 'In Transit', driver: 'Mike R.', eta: '2h 15m', rating: 5.0 },
+      { id: '#LD-3382', from: 'LAX', to: 'SFO', status: 'Optimal', driver: 'Sarah J.', eta: '45m', rating: 4.8 },
+      { id: '#LD-9921', from: 'MIA', to: 'ATL', status: 'Scheduled', driver: 'Assigning...', eta: 'Pending', rating: 5.0 }
   ];
 
   let activeBids = [
       { id: '#442', route: 'CHI → DET', carrier: 'FastTrack', bid: '$800', expires: '2h' },
-      { id: '#442', route: 'CHI → DET', carrier: "Mike's Trucking", bid: '$950', expires: '4h', lower: true }
+      { id: '#443', route: 'MIA → ORL', carrier: "Mike's Trucking", bid: '$950', expires: '4h', lower: true }
   ];
+
+  let referralCode = 'LOGIPRO-NATHAN-2026';
 
   // Calculate stats based on data
   $: dashboardStats = [
       { label: 'Live Shipments', val: liveShipments.length.toString(), mod: '+2', color: 'primary', icon: 'local_shipping' },
-      { label: 'Pending Bids', val: activeBids.length.toString().padStart(2, '0'), mod: 'Action', color: 'blue', icon: 'gavel' },
+      { label: 'Active Bids', val: activeBids.length.toString().padStart(2, '0'), mod: 'Action', color: 'blue', icon: 'gavel' },
       { label: 'Scheduled', val: '03', mod: 'Next: 8h', color: 'indigo', icon: 'calendar_today' },
-      { label: 'Monthly Spend', val: '$14.2k', mod: '+12%', color: 'emerald', icon: 'payments' }
+      { label: 'Wallet Balance', val: formatCurrency($walletBalance), mod: 'Available', color: 'emerald', icon: 'account_balance_wallet' }
   ];
 
   onMount(() => {
@@ -62,16 +68,33 @@
       goto('/login');
   }
 
+  function triggerToast(message) {
+      toastMessage = message;
+      showToast = true;
+      setTimeout(() => showToast = false, 3000);
+  }
+
   function handleAcceptBid(id) {
-      alert(`Accepted bid for Load ${id}. Navigate to payment/confirmation.`);
+      const cleanId = id.replace('#', '');
+      triggerToast(`Opening verification for Load ${id}...`);
+      goto(`/client/bids?verify=${cleanId}`);
   }
 
   function handleCounterBid(id) {
-      alert(`Opening counter-offer dialog for Load ${id}.`);
+      triggerToast(`Counter-offer sent for Load ${id}. Waiting for carrier response.`);
+  }
+
+  function copyReferral() {
+      navigator.clipboard.writeText(referralCode);
+      triggerToast('Referral code copied to clipboard!');
+  }
+
+  function handleChat() {
+      goto('/client/support');
   }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
+<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10 relative">
     <ClientSidebar activePage="dashboard" />
     
     <!-- Main Content -->
@@ -106,7 +129,7 @@
                 <div class="flex items-center gap-3 pl-4 border-l border-slate-200 group cursor-pointer">
                     <div class="flex flex-col items-end hidden sm:flex">
                         <span class="text-sm font-bold leading-tight group-hover:text-primary transition-colors">Nathan Wright</span>
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Premium User</span>
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Premium User</span>
                     </div>
                     <div class="h-10 w-10 rounded-xl overflow-hidden ring-2 ring-slate-100 group-hover:ring-primary/20 transition-all shadow-sm">
                         <img alt="User Avatar" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk1CgNlJV18_q29KbXBf8ln6HSnqfA-YzBNnf7JKoU7dYliOHYJtFhXuqR5CI5oQ1xB4e5kRizYPL-8iXm_wyFef4hltUdYqo5GSwjctgtyC1KmU3iS2_A6MntpBhUW7m6Z-b6Iu4uGyXvJdlmrLZ5BMBXyYcvBY_huYGi6d1tRX6rBYClpLei-YhoYKwFau4HZbNs7dT54pPwLUPH3v3SvQm3b_Enxkkl_h_lG6UOUScmaPgmlbwF5BWk5ewswLMlj7VDUYYfVAw"/>
@@ -125,8 +148,7 @@
 
                     </div>
                     <div class="flex items-center gap-4 mt-2">
-<p class="text-text-muted font-medium">{currentDate} • System Status: <span class="text-emerald-500 font-bold">Good</span></p>
-
+                        <p class="text-text-muted font-medium">{currentDate} • System Status: <span class="text-emerald-500 font-bold">Good</span></p>
                     </div>
                 </div>
                 <a href="/client/post-load" class="group relative flex items-center justify-center gap-3 bg-primary text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 overflow-hidden">
@@ -174,6 +196,7 @@
                                         <th class="px-6 py-5">Shipment ID</th>
                                         <th class="px-6 py-5">Route</th>
                                         <th class="px-6 py-5 text-center">Status</th>
+                                        <th class="px-6 py-5 text-center">Performance Index</th>
                                         <th class="px-6 py-5 text-right">Time Left</th>
                                     </tr>
                                 </thead>
@@ -205,6 +228,14 @@
                                                     {#if row.status === 'In Transit'}<span class="size-1.5 rounded-full bg-primary animate-pulse"></span>{/if}
                                                     {row.status}
                                                 </span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-5">
+                                            <div class="flex justify-center">
+                                                <div class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-100/50 shadow-sm shadow-amber-500/10">
+                                                    <span class="material-symbols-outlined text-sm text-amber-500">star</span>
+                                                    <span class="text-xs font-black text-amber-700">{row.rating.toFixed(1)}</span>
+                                                </div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-5 text-right">
@@ -265,9 +296,8 @@
                                 <h3 class="text-3xl font-black tracking-tight mb-2">Eco-Logistics Tracker</h3>
                                 <p class="text-emerald-100/80 text-sm font-medium leading-relaxed max-w-lg">Your commitment to sustainable logistics is making a real difference! Continue prioritizing eco-friendly options to help build a greener, healthier future for everyone.</p>
                             </div>
-
+                        </div>
                     </div>
-
 
                 </div>
 
@@ -277,7 +307,7 @@
                     <div class="premium-card flex flex-col h-fit">
                         <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
                             <h3 class="font-black text-lg tracking-tight">Bids on Your Shipments</h3>
-                            <span class="bg-primary/10 text-primary text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">5 Live</span>
+                            <span class="bg-primary/10 text-primary text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider animate-pulse">2 Live</span>
                         </div>
                         <div class="p-4 space-y-4">
                             {#each activeBids as bid}
@@ -291,7 +321,7 @@
                                     <span class="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">{bid.bid}</span>
                                 </div>
                                 <div class="flex items-center gap-3 pt-2">
-                                    <button on:click={() => handleAcceptBid(bid.id)} class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200">Accept</button>
+                                    <button on:click={() => handleAcceptBid(bid.id)} class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">Accept</button>
                                     <button on:click={() => handleCounterBid(bid.id)} class="flex-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-black py-3 rounded-xl hover:bg-slate-50 micro-interaction">Counter</button>
                                 </div>
                             </div>
@@ -309,8 +339,8 @@
                             <h3 class="text-xl font-black tracking-tight mb-3">Invite & Earn</h3>
                             <p class="text-blue-100 text-sm font-medium mb-8 leading-relaxed">Invite a friend to our network and receive <span class="font-black text-white">$50 Shipping Credits</span>.</p>
                             <div class="flex gap-2">
-                                <div class="flex-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-4 py-3 text-xs font-mono truncate">LOGIPRO-NATHAN-2026</div>
-                                <button class="bg-white text-primary px-4 py-3 rounded-xl font-black text-xs micro-interaction">Copy</button>
+                                <div class="flex-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-4 py-3 text-xs font-mono truncate">{referralCode}</div>
+                                <button on:click={copyReferral} class="bg-white text-primary px-4 py-3 rounded-xl font-black text-xs micro-interaction hover:bg-blue-50 transition-colors">Copy</button>
                             </div>
                         </div>
                     </div>
@@ -324,7 +354,7 @@
                             <h3 class="text-xl font-black tracking-tight mb-3 text-slate-900">Priority Support</h3>
                             <p class="text-slate-600 text-sm font-medium mb-8 leading-relaxed">Dedicated logistics manager sync available 24/7.</p>
                             <div class="flex gap-3">
-                                <button class="flex-1 py-4 rounded-xl bg-slate-900 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-slate-200">
+                                <button on:click={handleChat} class="flex-1 py-4 rounded-xl bg-slate-900 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">
                                     <span class="material-symbols-outlined text-[16px]">chat_bubble</span>
                                     Chat Now
                                 </button>
@@ -334,5 +364,17 @@
                 </div>
             </div>
         </div>
+
+        {#if showToast}
+            <div 
+                transition:fade
+                class="fixed bottom-6 right-6 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 z-50 max-w-sm"
+            >
+                <div class="size-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-lg">check_circle</span>
+                </div>
+                <p class="text-sm font-bold">{toastMessage}</p>
+            </div>
+        {/if}
     </main>
 </div>

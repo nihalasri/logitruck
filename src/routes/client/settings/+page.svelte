@@ -1,5 +1,5 @@
 <script>
-
+  import { goto } from '$app/navigation';
   import ClientSidebar from '$lib/components/ClientSidebar.svelte';
 </script>
 
@@ -101,7 +101,7 @@
                                         <p class="text-[10px] font-bold text-slate-400 uppercase">Preferred settlement modalities</p>
                                     </div>
                                 </div>
-                                <button class="text-primary text-[10px] font-black uppercase tracking-widest">Configure</button>
+                                <button onclick={() => goto('/client/payments')} class="text-primary text-[10px] font-black uppercase tracking-widest hover:underline">Configure</button>
                             </div>
 
                             <div class="p-6 rounded-2xl bg-primary/5 border border-primary/20">
