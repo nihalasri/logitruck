@@ -18,10 +18,14 @@
       // Keeping random ID logic for now if table isn't set up for auto-uuid, but ideally remove it. 
       // I'll keep the client-generated ID to match previous behavior for now to be safe.
       id: `L-${Math.floor(1000 + Math.random() * 9000)}`,
-      route: `${pickup || 'Unknown'} → ${dropoff || 'Unknown'}`,
-      cargo: shipmentType.charAt(0).toUpperCase() + shipmentType.slice(1),
-      status: 'Pending',
-      date: date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      origin: pickup || 'Unknown',
+      destination: dropoff || 'Unknown',
+      cargo_type: shipmentType.charAt(0).toUpperCase() + shipmentType.slice(1),
+      weight: 'Pending', // Placeholder until weight calculation is added
+      distance: 'Calculating...', // Placeholder
+      price: '$420.00', // Matches the estimated cost in UI
+      status: 'Open',
+      pickup_date: date || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     };
 
     try {

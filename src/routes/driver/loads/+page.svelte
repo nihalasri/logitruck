@@ -2,18 +2,48 @@
 
   import DriverSidebar from '$lib/components/DriverSidebar.svelte';
   import { activeJob } from '$lib/stores/job.js';
+  import { supabase } from '$lib/supabase';
+  import { onMount } from 'svelte';
 
   let originQuery = $state('');
   let destQuery = $state('');
 
-  const allLoads = [
-    { id: 'Ref #19384', origin: 'Chicago, IL', dest: 'Miami, FL', type: 'Reefer', weight: '42,000 lbs', dist: '1,300 miles', price: '$3,200', tag: 'Hot Load' },
-    { id: 'Ref #88221', origin: 'Seattle, WA', dest: 'Portland, OR', type: 'Dry Van', weight: '12,000 lbs', dist: '180 miles', price: '$450', tag: 'Ending Soon' },
-    { id: 'Ref #77321', origin: 'Austin, TX', dest: 'Dallas, TX', type: 'Flatbed', weight: '45,000 lbs', dist: '200 miles', price: '$600', tag: 'New' },
-    { id: 'Ref #11294', origin: 'Denver, CO', dest: 'Phoenix, AZ', type: 'Dry Van', weight: '38,000 lbs', dist: '850 miles', price: '$1,900', tag: 'Open' }
-  ];
+  let loads = $state([]);
+  let allLoads = []; // Cache for filtering
+  let loading = $state(true);
 
-  let loads = $state([...allLoads]);
+  async function fetchLoads() {
+      try {
+          const { data, error } = await supabase
+              .from('loads')
+              .select('*')
+              .order('created_at', { ascending: false });
+          
+          if (error) throw error;
+          
+          // Map DB fields to UI
+          allLoads = data.map(l => ({
+              id: l.id,
+              origin: l.origin,
+              dest: l.destination,
+              type: l.cargo_type,
+              weight: l.weight || 'N/A',
+              dist: l.distance || 'N/A',
+              price: l.price,
+              tag: l.status
+          }));
+          loads = [...allLoads];
+      } catch (err) {
+          console.error('Error fetching loads:', err);
+      } finally {
+          loading = false;
+      }
+  }
+
+  onMount(() => {
+      fetchLoads();
+  });
+
   let showConfirmation = $state(false);
   let showSuccess = $state(false);
   let selectedLoad = $state(null);
@@ -100,6 +130,16 @@
                 </div>
 
                 <!-- Load Grid -->
+                {#if loading}
+                    <div class="flex justify-center py-20">
+                        <div class="size-10 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>
+                    </div>
+                {:else if loads.length === 0}
+                    <div class="text-center py-20 text-slate-400">
+                        <span class="material-symbols-outlined text-4xl mb-4">folder_off</span>
+                        <p>No available loads found.</p>
+                    </div>
+                {:else}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12">
                     {#each loads as load}
                         <div class="premium-card p-8 group hover:border-primary/20 transition-all duration-500 relative flex flex-col">
@@ -152,6 +192,7 @@
                         </div>
                     {/each}
                 </div>
+                {/if}
 
                 <!-- Footer Stats -->
                 <div class="py-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-8">
