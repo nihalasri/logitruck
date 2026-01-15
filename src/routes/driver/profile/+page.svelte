@@ -1,21 +1,24 @@
 <script>
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+  import DriverSidebar from '$lib/components/DriverSidebar.svelte';
   
   let user = $state({
-      name: "Nathan Wright",
-      email: "nathan.wright@logipro.com",
-      role: "Logistics Manager",
-      company: "LogiPro Solutions",
-      phone: "+1 (555) 123-4567",
-      location: "San Francisco, CA",
-      avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuDk1CgNlJV18_q29KbXBf8ln6HSnqfA-YzBNnf7JKoU7dYliOHYJtFhXuqR5CI5oQ1xB4e5kRizYPL-8iXm_wyFef4hltUdYqo5GSwjctgtyC1KmU3iS2_A6MntpBhUW7m6Z-b6Iu4uGyXvJdlmrLZ5BMBXyYcvBY_huYGi6d1tRX6rBYClpLei-YhoYKwFau4HZbNs7dT54pPwLUPH3v3SvQm3b_Enxkkl_h_lG6UOUScmaPgmlbwF5BWk5ewswLMlj7VDUYYfVAw"
+      name: "David Sterlings",
+      email: "driver.dave@logitruck.com",
+      role: "Senior Operator",
+      carrier: "LogiTrans Fleet Services",
+      phone: "+1 (555) 987-6543",
+      location: "Phoenix, AZ",
+      license: "CDL-A 28394022",
+      truck: "Volvo VNL 860",
+      plate: "AZ 48392",
+      avatar: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
   });
 
   let isEditing = $state(false);
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="profile" />
+    <DriverSidebar activePage="profile" />
     
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Header -->
@@ -37,7 +40,7 @@
                 <div class="flex items-center gap-3 pl-4 border-l border-slate-200 cursor-pointer">
                     <div class="flex flex-col items-end hidden sm:flex">
                         <span class="text-sm font-bold leading-tight">{user.name}</span>
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Premium User</span>
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{user.role}</span>
                     </div>
                     <div class="h-10 w-10 rounded-xl overflow-hidden ring-2 ring-slate-100 shadow-sm">
                         <img alt="User Avatar" class="h-full w-full object-cover" src={user.avatar}/>
@@ -51,8 +54,8 @@
             
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-none font-display">My Profile</h2>
-                    <p class="text-slate-500 font-medium mt-2">Manage your account settings and preferences.</p>
+                    <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-none font-display">Driver Profile</h2>
+                    <p class="text-slate-500 font-medium mt-2">Manage your credentials and vehicle information.</p>
                 </div>
                 <button 
                   onclick={() => isEditing = !isEditing}
@@ -66,7 +69,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Profile Card -->
                 <div class="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center relative overflow-hidden">
-                   <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-primary/10 to-blue-500/10"></div>
+                   <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-br from-indigo-500/10 to-blue-500/10"></div>
                    
                    <div class="relative z-10 mt-12 mb-6">
                        <div class="size-32 rounded-3xl overflow-hidden ring-4 ring-white shadow-2xl">
@@ -80,16 +83,20 @@
                    </div>
 
                    <h3 class="text-2xl font-black text-slate-900">{user.name}</h3>
-                   <p class="text-slate-500 font-medium mb-6">{user.role} at {user.company}</p>
+                   <p class="text-slate-500 font-medium mb-6">{user.role}</p>
 
                    <div class="flex gap-4 w-full">
                        <div class="flex-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                           <p class="text-2xl font-black text-slate-900">124</p>
-                           <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Shipments</p>
+                           <p class="text-2xl font-black text-slate-900">182</p>
+                           <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Trips</p>
                        </div>
                        <div class="flex-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                            <p class="text-2xl font-black text-slate-900">4.9</p>
                            <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Rating</p>
+                       </div>
+                       <div class="flex-1 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                           <p class="text-2xl font-black text-slate-900">98%</p>
+                           <p class="text-[10px] uppercase font-black text-slate-400 tracking-widest">Safety</p>
                        </div>
                    </div>
                 </div>
@@ -126,7 +133,7 @@
                             {/if}
                         </div>
                          <div class="space-y-2">
-                            <label for="profile-location" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Location</label>
+                            <label for="profile-location" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Base Location</label>
                             {#if isEditing}
                                 <input id="profile-location" type="text" bind:value={user.location} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
@@ -138,25 +145,40 @@
                     <div class="w-full h-px bg-slate-100 my-8"></div>
 
                     <h4 class="text-lg font-black text-slate-900 mb-6 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">business</span>
-                        Company Details
+                        <span class="material-symbols-outlined text-primary">local_shipping</span>
+                        Professional Details
                     </h4>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div class="space-y-2">
-                            <label for="profile-company" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Company Name</label>
+                            <label for="profile-carrier" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Carrier / Fleet</label>
                             {#if isEditing}
-                                <input id="profile-company" type="text" bind:value={user.company} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-carrier" type="text" bind:value={user.carrier} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
-                                <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.company}</div>
+                                <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.carrier}</div>
                             {/if}
                         </div>
+                        <div class="space-y-2">
+                            <label for="profile-license" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">License Number</label>
+                            <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent flex items-center gap-2">
+                                <span class="material-symbols-outlined text-emerald-500">verified_user</span>
+                                {user.license}
+                            </div>
+                        </div>
                          <div class="space-y-2">
-                            <label for="profile-role" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Role/Position</label>
+                            <label for="profile-truck" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Truck Model</label>
                             {#if isEditing}
-                                <input id="profile-role" type="text" bind:value={user.role} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-truck" type="text" bind:value={user.truck} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
-                                <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.role}</div>
+                                <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.truck}</div>
+                            {/if}
+                        </div>
+                           <div class="space-y-2">
+                            <label for="profile-plate" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">License Plate</label>
+                            {#if isEditing}
+                                <input id="profile-plate" type="text" bind:value={user.plate} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                            {:else}
+                                <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.plate}</div>
                             {/if}
                         </div>
                     </div>

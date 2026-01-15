@@ -17,6 +17,7 @@
         { name: 'History', icon: 'history', href: `${base}/client/history` },
         { name: 'Payments', icon: 'payments', href: `${base}/client/payments` },
         { name: 'Support', icon: 'support_agent', href: `${base}/client/support` },
+        { name: 'Profile', icon: 'person', href: `${base}/client/profile` },
     ];
 </script>
 

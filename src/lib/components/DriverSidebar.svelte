@@ -16,6 +16,7 @@
         { name: 'My Bids', icon: 'gavel', href: `${base}/driver/bids` },
         { name: 'History', icon: 'history', href: `${base}/driver/history` },
         { name: 'Earnings', icon: 'payments', href: `${base}/driver/earnings` },
+        { name: 'Profile', icon: 'person', href: `${base}/driver/profile` },
     ];
 </script>
 
