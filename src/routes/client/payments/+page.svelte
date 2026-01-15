@@ -266,7 +266,7 @@
     <!-- Add Funds Modal -->
     {#if showAddFundsModal}
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4" transition:fade>
-            <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" on:click={() => showAddFundsModal = false}></div>
+            <button class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-default w-full h-full border-none" on:click={() => showAddFundsModal = false} aria-label="Close modal"></button>
             <div class="bg-white w-full max-w-md rounded-3xl p-8 relative z-10 shadow-2xl flex flex-col items-center" transition:fly={{ y: 20 }}>
                 <div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-3xl text-primary">add_card</span>
@@ -276,8 +276,9 @@
                 
                 <div class="w-full space-y-4">
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 mb-2 block">Amount ($)</label>
+                        <label for="add-amount" class="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1 mb-2 block">Amount ($)</label>
                         <input 
+                            id="add-amount"
                             type="number" 
                             bind:value={addAmount} 
                             placeholder="Enter amount (e.g. 500)" 

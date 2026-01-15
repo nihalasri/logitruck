@@ -103,32 +103,32 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                            <label for="profile-name" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
                             {#if isEditing}
-                                <input type="text" bind:value={user.name} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-name" type="text" bind:value={user.name} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
                                 <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.name}</div>
                             {/if}
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Email Address</label>
+                            <span class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">Email Address</span>
                             <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent flex items-center justify-between">
                                 {user.email}
                                 <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-lg font-bold">VERIFIED</span>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
+                            <label for="profile-phone" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Phone Number</label>
                             {#if isEditing}
-                                <input type="text" bind:value={user.phone} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-phone" type="text" bind:value={user.phone} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
                                 <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.phone}</div>
                             {/if}
                         </div>
                          <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Location</label>
+                            <label for="profile-location" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Location</label>
                             {#if isEditing}
-                                <input type="text" bind:value={user.location} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-location" type="text" bind:value={user.location} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
                                 <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.location}</div>
                             {/if}
@@ -144,17 +144,17 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Company Name</label>
+                            <label for="profile-company" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Company Name</label>
                             {#if isEditing}
-                                <input type="text" bind:value={user.company} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-company" type="text" bind:value={user.company} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
                                 <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.company}</div>
                             {/if}
                         </div>
                          <div class="space-y-2">
-                            <label class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Role/Position</label>
+                            <label for="profile-role" class="text-xs font-black text-slate-500 uppercase tracking-widest ml-1">Role/Position</label>
                             {#if isEditing}
-                                <input type="text" bind:value={user.role} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
+                                <input id="profile-role" type="text" bind:value={user.role} class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border-none focus:ring-2 focus:ring-primary/20 transition-all outline-none" />
                             {:else}
                                 <div class="w-full p-4 bg-slate-50 rounded-2xl font-bold text-slate-700 border border-transparent">{user.role}</div>
                             {/if}

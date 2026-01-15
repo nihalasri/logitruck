@@ -170,7 +170,7 @@
     <!-- Chat Modal -->
     {#if showChat}
         <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4" transition:fade>
-            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" on:click={handleChatClose}></div>
+            <button class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm w-full h-full cursor-default border-none" on:click={handleChatClose} aria-label="Close chat"></button>
             <div class="bg-white w-full sm:max-w-lg h-[80vh] sm:h-[650px] sm:rounded-3xl shadow-2xl relative z-10 flex flex-col overflow-hidden" transition:fly={{ y: 50 }}>
                 <!-- Header -->
                 <div class="bg-slate-900 p-6 flex flex-col justify-between shrink-0">
