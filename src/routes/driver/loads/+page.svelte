@@ -140,58 +140,66 @@
                         <p>No available loads found.</p>
                     </div>
                 {:else}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-12">
-                    {#each loads as load}
-                        <div class="premium-card p-8 group hover:border-primary/20 transition-all duration-500 relative flex flex-col">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h3 class="text-xl font-black text-slate-900 leading-tight mb-1">{load.origin} <span class="text-slate-300 mx-1">→</span> {load.dest}</h3>
-                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{load.id}</p>
-                                </div>
-                                <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {load.tag === 'Hot Load' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-primary/5 text-primary border border-primary/10'}">
-                                    {load.tag}
-                                </span>
-                            </div>
-
-                            <div class="space-y-4 mb-8">
-                                <div class="flex items-center gap-4">
-                                    <div class="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[20px]">local_shipping</span>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Asset Required</p>
-                                        <p class="text-sm font-black text-slate-900">{load.type}</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <div class="size-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400">
-                                        <span class="material-symbols-outlined text-[20px]">calendar_today</span>
-                                    </div>
-                                    <div>
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pickup Schedule</p>
-                                        <p class="text-sm font-black text-slate-900">Oct 24 • 08:00 UTC</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-auto bg-slate-50 rounded-2xl p-6 border border-slate-100 flex items-center justify-between mb-8">
-                                <div>
-                                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Fixed Settlement</p>
-                                    <p class="text-3xl font-black text-primary leading-none">{load.price}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">{load.dist}</p>
-                                    <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Instant Book</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <button onclick={() => handlePickup(load)} class="py-4 bg-slate-900 text-white rounded-xl font-black text-xs shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all micro-interaction">Pick up load</button>
-                                <button onclick={() => handleInspect(load)} class="py-4 bg-white border border-slate-200 text-slate-900 rounded-xl font-black text-xs hover:bg-slate-50 transition-all micro-interaction">Inspect Manifest</button>
-                            </div>
-                        </div>
-                    {/each}
-                </div>
+                    <div class="premium-card overflow-hidden mb-12">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Load Ref</th>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Route Node</th>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Cargo Specs</th>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Settlement</th>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                {#each loads as load}
+                                    <tr class="hover:bg-slate-50/50 transition-colors group">
+                                        <td class="px-6 py-6">
+                                            <div class="flex flex-col">
+                                                <span class="font-black text-primary tracking-tighter">{load.id}</span>
+                                                <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest w-fit mt-1 {load.tag === 'Hot Load' ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-400'}">
+                                                    {load.tag}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-6 font-black text-slate-900">
+                                            <div class="flex items-center gap-2">
+                                                <span>{load.origin}</span>
+                                                <span class="text-slate-300">→</span>
+                                                <span>{load.dest}</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 mt-1 uppercase tracking-wide">{load.dist}</p>
+                                        </td>
+                                        <td class="px-6 py-6">
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-[16px] text-slate-400">local_shipping</span>
+                                                    <span class="text-xs font-bold text-slate-700">{load.type}</span>
+                                                </div>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="material-symbols-outlined text-[16px] text-slate-400">scale</span>
+                                                    <span class="text-xs font-bold text-slate-700">{load.weight}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-6">
+                                            <span class="text-xl font-black text-emerald-600">{load.price}</span>
+                                        </td>
+                                        <td class="px-6 py-6 text-right">
+                                            <div class="flex items-center justify-end gap-2">
+                                                <button onclick={() => handleInspect(load)} class="p-2 rounded-lg border border-slate-200 text-slate-400 hover:text-primary hover:border-primary transition-all" title="Inspect">
+                                                    <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                                </button>
+                                                <button onclick={() => handlePickup(load)} class="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-black uppercase tracking-widest shadow-lg hover:bg-primary transition-all">
+                                                    Pick Up
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    </div>
                 {/if}
 
                 <!-- Footer Stats -->

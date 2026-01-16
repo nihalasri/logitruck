@@ -59,25 +59,44 @@
                             <div class="p-6 border-b border-slate-100 bg-slate-50/50">
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Transaction Ledger</h3>
                             </div>
-                            <div class="divide-y divide-slate-100">
-                                {#each transactions as tx}
-                                    <div class="p-6 hover:bg-slate-50/50 transition-colors flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <div class="size-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
-                                                <span class="material-symbols-outlined text-[20px]">{tx.type.includes('Fuel') ? 'local_gas_station' : 'payments'}</span>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-black text-slate-900">{tx.type}</p>
-                                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{tx.date} • ID: {tx.id}</p>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <p class="text-sm font-black text-slate-900">{tx.amount}</p>
-                                            <span class="text-[9px] font-black uppercase tracking-widest {tx.status === 'Deposited' ? 'text-emerald-500' : 'text-blue-500'}">{tx.status}</span>
-                                        </div>
-                                    </div>
-                                {/each}
-                            </div>
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-50 border-b border-slate-100">
+                                    <tr>
+                                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Transaction Type</th>
+                                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Details</th>
+                                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Amount</th>
+                                        <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    {#each transactions as tx}
+                                        <tr class="hover:bg-slate-50/50 transition-colors group">
+                                            <td class="px-6 py-6">
+                                                <div class="flex items-center gap-4">
+                                                    <div class="size-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400">
+                                                        <span class="material-symbols-outlined text-[20px]">{tx.type.includes('Fuel') ? 'local_gas_station' : 'payments'}</span>
+                                                    </div>
+                                                    <span class="text-sm font-black text-slate-900">{tx.type}</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-6">
+                                                <div class="flex flex-col">
+                                                     <span class="text-xs font-bold text-slate-900">ID: {tx.id}</span>
+                                                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{tx.date}</span>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-6">
+                                                <span class="text-sm font-black text-slate-900">{tx.amount}</span>
+                                            </td>
+                                            <td class="px-6 py-6 text-right">
+                                                 <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {tx.status === 'Deposited' ? 'bg-emerald-50 text-emerald-500' : 'bg-blue-50 text-blue-500'}">
+                                                    {tx.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {/each}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 

@@ -60,38 +60,45 @@
                             </button>
                         </div>
                     </div>
-                    <div class="divide-y divide-slate-100">
-                        {#each bids as bid}
-                            <div class="p-6 hover:bg-slate-50/50 transition-colors group">
-                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                    <div class="flex items-center gap-5">
-                                        <div class="size-14 rounded-2xl {bid.bg} flex items-center justify-center {bid.color} border border-current border-opacity-10">
-                                            <span class="material-symbols-outlined text-3xl font-black">{bid.status === 'Accepted' ? 'check_circle' : 'gavel'}</span>
-                                        </div>
-                                        <div>
-                                            <div class="flex items-center gap-3 mb-1">
-                                                <h4 class="text-lg font-black text-slate-900">{bid.id}</h4>
-                                                <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {bid.bg} {bid.color}">
-                                                    {bid.status}
-                                                </span>
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Proposal ID</th>
+                                <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Route & Cargo</th>
+                                <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Financial Bid</th>
+                                <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+                                <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {#each bids as bid}
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td class="px-6 py-6 font-black text-slate-900">
+                                        {bid.id}
+                                    </td>
+                                    <td class="px-6 py-6">
+                                        <div class="flex flex-col">
+                                            <span class="text-xs font-black text-slate-900">{bid.route}</span>
+                                            <div class="flex items-center gap-2 mt-1">
+                                                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tight">{bid.type}</span>
+                                                <span class="size-1 rounded-full bg-slate-200"></span>
+                                                <span class="text-[9px] font-bold text-slate-500 uppercase tracking-tight">{bid.weight}</span>
                                             </div>
-                                            <div class="flex items-center gap-3 text-slate-500 text-[10px] font-black uppercase tracking-widest">
-                                                <span>{bid.route}</span>
-                                                <span class="size-1 rounded-full bg-slate-300"></span>
-                                                <span>{bid.type}</span>
-                                                <span class="size-1 rounded-full bg-slate-300"></span>
-                                                <span>{bid.weight}</span>
-                                            </div>
                                         </div>
-                                    </div>
-
-                                    <div class="flex items-center gap-12">
-                                        <div class="text-right">
-                                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Bid Amount</p>
-                                            <p class="text-lg font-black text-slate-900">{bid.total}</p>
-                                            <p class="text-[10px] font-bold text-slate-500 uppercase">{bid.rate}/km</p>
+                                    </td>
+                                    <td class="px-6 py-6">
+                                        <div class="flex flex-col">
+                                            <span class="text-sm font-black text-slate-900">{bid.total}</span>
+                                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{bid.rate}/km</span>
                                         </div>
-                                        <div class="flex gap-2">
+                                    </td>
+                                    <td class="px-6 py-6">
+                                        <span class="px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest {bid.bg} {bid.color}">
+                                            {bid.status}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-6 text-right">
+                                        <div class="flex items-center justify-end gap-2">
                                             <button class="px-4 py-2 rounded-xl border border-slate-200 text-xs font-black uppercase tracking-widest hover:bg-white hover:border-primary hover:text-primary transition-all">
                                                 Edit
                                             </button>
@@ -99,11 +106,11 @@
                                                 Retract
                                             </button>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        {/each}
-                    </div>
+                                    </td>
+                                </tr>
+                            {/each}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
