@@ -211,8 +211,14 @@
                             <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">Confirm Password</span>
                             <div class="relative group">
                                 <span class="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-300 group-focus-within:text-primary transition-colors">verified_user</span>
-                                <input bind:value={confirmPassword} type="password" placeholder="••••••••••••" required class="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" />
+                                <input bind:value={confirmPassword} type="password" placeholder="••••••••••••" required class="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border-none text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner {password && confirmPassword && password !== confirmPassword ? 'ring-2 ring-red-500/50 bg-red-50' : ''}" />
                             </div>
+                            {#if password && confirmPassword && password !== confirmPassword}
+                                <p class="text-[10px] font-black uppercase tracking-wider text-red-500 ml-1 animate-fade-in flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">error</span>
+                                    Passwords do not match
+                                </p>
+                            {/if}
                         </div>
 
                         <div class="flex items-center gap-3 px-1 pt-2">
