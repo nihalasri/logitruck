@@ -137,8 +137,18 @@
 
                 <form class="space-y-6" onsubmit={handleLogin}>
                     {#if error}
-                        <div class="p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-xs font-black uppercase tracking-wider animate-shake">
-                            {error}
+                        <div class="p-4 rounded-xl text-xs font-black uppercase tracking-wider animate-shake {error.includes('Email not confirmed') ? 'bg-amber-50 border border-amber-100 text-amber-600' : 'bg-red-50 border border-red-100 text-red-600'}">
+                            {#if error.includes('Email not confirmed')}
+                                <div class="flex flex-col gap-1">
+                                    <span class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[16px]">mark_email_unread</span>
+                                        Verification Required
+                                    </span>
+                                    <span class="normal-case opacity-80 font-bold">Please check your email to verify your account before logging in.</span>
+                                </div>
+                            {:else}
+                                {error}
+                            {/if}
                         </div>
                     {/if}
 
