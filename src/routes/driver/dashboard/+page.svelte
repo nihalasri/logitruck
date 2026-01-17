@@ -1,8 +1,9 @@
 <script>
-
   import { goto } from '$app/navigation';
   import DriverSidebar from '$lib/components/DriverSidebar.svelte';
   import { activeJob } from '$lib/stores/job.js';
+  import { supabase } from '$lib/supabase';
+  import { onMount } from 'svelte';
 
   let showDeliveryForm = $state(false);
   let deliveryLocation = $state(null);
@@ -10,6 +11,38 @@
   let isDeliveryComplete = $state(false);
   let formattedLocation = $state('');
   let deliveryOtp = $state('');
+  let currentUser = $state(null);
+
+  onMount(async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+          currentUser = user;
+          fetchActiveJob(user.id);
+      }
+  });
+
+  async function fetchActiveJob(userId) {
+      // Find a load assigned to this driver that is In Transit
+      const { data, error } = await supabase
+          .from('loads')
+          .select('*')
+          .eq('driver_id', userId)
+          .eq('status', 'In Transit') 
+          .single();
+
+      if (data) {
+          activeJob.set({
+              id: `#${data.id.slice(0, 8).toUpperCase()}`,
+              id_raw: data.id,
+              type: data.cargo_type,
+              weight: data.weight || 'N/A',
+              origin: data.origin,
+              dest: data.destination,
+              dist: data.distance || 'Calculating...',
+              price: data.price
+          });
+      }
+  }
 
   function handleLogout() {
       goto('/login');
@@ -63,14 +96,36 @@
       }
   }
 
-  function finalizeDelivery() {
-      // Here you would upload the data to backend
-      isDeliveryComplete = true;
-      // activeJob specific fields could be updated in a real app
-      // e.g. activeJob.update(j => ({...j, status: 'Delivered'}));
-  }
+  async function finalizeDelivery() {
+      if (!currentUser || !$activeJob) return;
 
-</script>
+      try {
+        // 1. Log GPS Location
+        await supabase.from('gps_tracking').insert({
+            load_id: $activeJob.id_raw,
+            driver_id: currentUser.id,
+            latitude: deliveryLocation.coords.latitude,
+            longitude: deliveryLocation.coords.longitude,
+            speed: deliveryLocation.coords.speed || 0,
+            heading: deliveryLocation.coords.heading || 0
+        });
+
+        // 2. Update Load Status
+        const { error } = await supabase
+            .from('loads')
+            .update({ status: 'Delivered', delivery_date: new Date().toISOString() })
+            .eq('id', $activeJob.id_raw);
+
+        if (error) throw error;
+
+        isDeliveryComplete = true;
+        activeJob.set(null); // Clear active job logic locally
+        
+      } catch (err) {
+          console.error('Delivery failed:', err);
+          alert('Failed to complete delivery. Check console.');
+      }
+  }
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
     <DriverSidebar activePage="dashboard" />

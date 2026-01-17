@@ -5,17 +5,68 @@
   import { fade } from 'svelte/transition';
   import { walletBalance, formatCurrency } from '$lib/stores/wallet';
 
-  let currentDate = '';
-  let showToast = false;
-  let toastMessage = '';
+  import { supabase } from '$lib/supabase';
 
-  // Initial loading state or default values
-  let dashboardStats = [
-      { label: 'Live Shipments', val: '-', mod: '...', color: 'primary', icon: 'local_shipping' },
-      { label: 'Pending Bids', val: '-', mod: '...', color: 'blue', icon: 'gavel' },
-      { label: 'Scheduled', val: '-', mod: '...', color: 'indigo', icon: 'calendar_today' },
-      { label: 'Wallet Balance', val: '-', mod: '...', color: 'emerald', icon: 'account_balance_wallet' }
-  ];
+  let currentDate = $state('');
+  let showToast = $state(false);
+  let toastMessage = $state('');
+  let isLoading = $state(true);
+
+  // Data
+  let liveShipments = $state([]);
+  let activeBids = $state([]); // Would fetch specific bids in real impl
+  
+  // Dashboard Stats
+  let dashboardStats = $derived([
+      { label: 'Live Shipments', val: liveShipments.length.toString(), mod: 'Active', color: 'primary', icon: 'local_shipping' },
+      { label: 'Active Bids', val: activeBids.length.toString(), mod: 'Pending', color: 'blue', icon: 'gavel' },
+      { label: 'Scheduled', val: liveShipments.filter(l => l.status === 'Scheduled').length.toString(), mod: 'Next: 8h', color: 'indigo', icon: 'calendar_today' },
+      { label: 'Wallet Balance', val: formatCurrency($walletBalance), mod: 'Available', color: 'emerald', icon: 'account_balance_wallet' }
+  ]);
+
+  let referralCode = 'LOGIPRO-NATHAN-2026';
+
+  onMount(async () => {
+      updateDate();
+      const dateInterval = setInterval(updateDate, 60000);
+      
+      await fetchDashboardData();
+
+      return () => clearInterval(dateInterval);
+  });
+
+  async function fetchDashboardData() {
+      try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) return;
+
+          // Fetch Client's Loads
+          const { data: loads, error } = await supabase
+              .from('loads')
+              .select('*')
+              .eq('client_id', user.id)
+              .order('created_at', { ascending: false });
+
+          if (error) throw error;
+
+          // Transform for UI
+          liveShipments = loads.map(load => ({
+              id: `#${load.id.slice(0, 8).toUpperCase()}`, // Short UUID
+              from: load.origin,
+              to: load.destination,
+              status: load.status,
+              driver: load.driver_id ? 'Assigned' : 'Finding...',
+              eta: load.delivery_date ? new Date(load.delivery_date).toLocaleDateString() : 'Pending',
+              rating: 5.0 // Placeholder
+          }));
+
+      } catch (err) {
+          console.error("Error fetching dashboard data:", err);
+          triggerToast("Failed to load dashboard data");
+      } finally {
+          isLoading = false;
+      }
+  }
 
   function updateDate() {
       const now = new Date();
@@ -35,34 +86,6 @@
       
       currentDate = `${weekday}, ${month} ${day}${suffix(day)}`;
   }
-
-  // Moved data arrays to script for reactivity
-  let liveShipments = [
-      { id: '#LD-4921', from: 'NYC', to: 'BOS', status: 'In Transit', driver: 'Mike R.', eta: '2h 15m', rating: 5.0 },
-      { id: '#LD-3382', from: 'LAX', to: 'SFO', status: 'Optimal', driver: 'Sarah J.', eta: '45m', rating: 4.8 },
-      { id: '#LD-9921', from: 'MIA', to: 'ATL', status: 'Scheduled', driver: 'Assigning...', eta: 'Pending', rating: 5.0 }
-  ];
-
-  let activeBids = [
-      { id: '#442', route: 'CHI → DET', carrier: 'FastTrack', bid: '$800', expires: '2h' },
-      { id: '#443', route: 'MIA → ORL', carrier: "Mike's Trucking", bid: '$950', expires: '4h', lower: true }
-  ];
-
-  let referralCode = 'LOGIPRO-NATHAN-2026';
-
-  // Calculate stats based on data
-  $: dashboardStats = [
-      { label: 'Live Shipments', val: liveShipments.length.toString(), mod: '+2', color: 'primary', icon: 'local_shipping' },
-      { label: 'Active Bids', val: activeBids.length.toString().padStart(2, '0'), mod: 'Action', color: 'blue', icon: 'gavel' },
-      { label: 'Scheduled', val: '03', mod: 'Next: 8h', color: 'indigo', icon: 'calendar_today' },
-      { label: 'Wallet Balance', val: formatCurrency($walletBalance), mod: 'Available', color: 'emerald', icon: 'account_balance_wallet' }
-  ];
-
-  onMount(() => {
-      updateDate();
-      const dateInterval = setInterval(updateDate, 60000);
-      return () => clearInterval(dateInterval);
-  });
 
   function handleLogout() {
       goto('/login');
@@ -321,8 +344,8 @@
                                     <span class="text-xl font-black text-slate-900 group-hover:text-primary transition-colors">{bid.bid}</span>
                                 </div>
                                 <div class="flex items-center gap-3 pt-2">
-                                    <button on:click={() => handleAcceptBid(bid.id)} class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">Accept</button>
-                                    <button on:click={() => handleCounterBid(bid.id)} class="flex-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-black py-3 rounded-xl hover:bg-slate-50 micro-interaction">Counter</button>
+                                    <button onclick={() => handleAcceptBid(bid.id)} class="flex-1 bg-slate-900 text-white text-[11px] font-black py-3 rounded-xl micro-interaction shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">Accept</button>
+                                    <button onclick={() => handleCounterBid(bid.id)} class="flex-1 bg-white border border-slate-200 text-slate-700 text-[11px] font-black py-3 rounded-xl hover:bg-slate-50 micro-interaction">Counter</button>
                                 </div>
                             </div>
                             {/each}
@@ -340,7 +363,7 @@
                             <p class="text-blue-100 text-sm font-medium mb-8 leading-relaxed">Invite a friend to our network and receive <span class="font-black text-white">$50 Shipping Credits</span>.</p>
                             <div class="flex gap-2">
                                 <div class="flex-1 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 px-4 py-3 text-xs font-mono truncate">{referralCode}</div>
-                                <button on:click={copyReferral} class="bg-white text-primary px-4 py-3 rounded-xl font-black text-xs micro-interaction hover:bg-blue-50 transition-colors">Copy</button>
+                                <button onclick={copyReferral} class="bg-white text-primary px-4 py-3 rounded-xl font-black text-xs micro-interaction hover:bg-blue-50 transition-colors">Copy</button>
                             </div>
                         </div>
                     </div>
@@ -354,7 +377,7 @@
                             <h3 class="text-xl font-black tracking-tight mb-3 text-slate-900">Priority Support</h3>
                             <p class="text-slate-600 text-sm font-medium mb-8 leading-relaxed">Dedicated logistics manager sync available 24/7.</p>
                             <div class="flex gap-3">
-                                <button on:click={handleChat} class="flex-1 py-4 rounded-xl bg-slate-900 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">
+                                <button onclick={handleChat} class="flex-1 py-4 rounded-xl bg-slate-900 text-white font-black text-[11px] micro-interaction flex items-center justify-center gap-2 shadow-lg shadow-slate-200 hover:bg-slate-800 transition-colors">
                                     <span class="material-symbols-outlined text-[16px]">chat_bubble</span>
                                     Chat Now
                                 </button>

@@ -66,14 +66,14 @@
                             <tr class="hover:bg-slate-50/50 transition-all group relative {activeMenuId === load.id ? 'z-50' : 'z-0'}">
                                 <td class="px-8 py-6">
                                     <div class="flex flex-col">
-                                        <span class="font-black text-primary tracking-tighter">{load.id}</span>
-                                        <span class="text-[10px] font-bold text-slate-400">{load.date}</span>
+                                        <span class="font-black text-primary tracking-tighter">{load.id.slice(0, 8)}...</span>
+                                        <span class="text-[10px] font-bold text-slate-400">{new Date(load.pickup_date || load.created_at).toLocaleDateString()}</span>
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">
                                     <div class="flex flex-col">
-                                        <span class="text-xs font-black text-slate-900">{load.route}</span>
-                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{load.cargo}</span>
+                                        <span class="text-xs font-black text-slate-900">{load.origin} → {load.destination}</span>
+                                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{load.cargo_type || 'General'}</span>
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">

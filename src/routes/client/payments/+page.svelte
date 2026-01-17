@@ -1,43 +1,75 @@
 <script>
+    import { supabase } from '$lib/supabase';
+    import { onMount } from 'svelte';
     import ClientSidebar from '$lib/components/ClientSidebar.svelte';
     import { fade, fly } from 'svelte/transition';
     import { walletBalance, formatCurrency } from '$lib/stores/wallet';
 
-    let payments = [
-        { id: 'PAY-001', amount: '$1,200.00', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 24, 2026' },
-        { id: 'PAY-002', amount: '$450.00', method: 'Bank Transfer', status: 'Pending', date: 'Oct 25, 2026' },
-        { id: 'PAY-003', amount: '$300.00', method: 'Visa **** 4242', status: 'Completed', date: 'Oct 05, 2026' },
-        { id: 'PAY-004', amount: '$2,150.00', method: 'Mastercard **** 8899', status: 'Completed', date: 'Sep 28, 2026' },
-        { id: 'PAY-005', amount: '$850.50', method: 'Wallet Balance', status: 'Completed', date: 'Sep 15, 2026' }
-    ];
+    let payments = $state([]);
+    let showAddFundsModal = $state(false);
+    let addAmount = $state('');
+    let isProcessing = $state(false);
+    let promoCode = $state('');
+    let splitPaymentActive = $state(false);
 
-    let showAddFundsModal = false;
-    let addAmount = '';
-    let isProcessing = false;
-    let promoCode = '';
-    let splitPaymentActive = false;
+    onMount(async () => {
+        await fetchTransactions();
+    });
 
-    function handleAddFunds() {
+    async function fetchTransactions() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+            .from('transactions')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: false });
+
+        if (data) {
+            payments = data.map(t => ({
+                id: `#TRX-${t.id.slice(0, 8).toUpperCase()}`,
+                amount: formatCurrency(t.amount),
+                method: t.description || 'Wallet',
+                status: 'Completed', // Simplified
+                date: new Date(t.created_at).toLocaleDateString()
+            }));
+            
+            // Calculate balance locally if needed, or rely on store
+        }
+    }
+
+    async function handleAddFunds() {
         if (!addAmount || isNaN(addAmount) || Number(addAmount) <= 0) return;
         isProcessing = true;
         
-        // Simulate API call
-        setTimeout(() => {
-            $walletBalance += Number(addAmount);
-            payments = [
-                { 
-                    id: `PAY-${Math.floor(Math.random() * 10000)}`, 
-                    amount: formatCurrency(addAmount), 
-                    method: 'Bank Transfer', 
-                    status: 'Completed', 
-                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) 
-                },
-                ...payments
-            ];
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+             if (!user) throw new Error("No user");
+
+            const amount = Number(addAmount);
+            
+            // Insert Transaction
+            const { error } = await supabase.from('transactions').insert({
+                user_id: user.id,
+                amount: amount,
+                type: 'deposit',
+                description: 'Add Funds via Card'
+            });
+
+            if (error) throw error;
+
+            $walletBalance += amount;
+            await fetchTransactions(); // Refresh list
+            
             addAmount = '';
-            isProcessing = false;
             showAddFundsModal = false;
-        }, 1500);
+        } catch (err) {
+            console.error("Add funds failed", err);
+            alert("Failed to add funds");
+        } finally {
+            isProcessing = false;
+        }
     }
 
     function exportData() {
