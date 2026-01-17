@@ -4,6 +4,17 @@
 	import favicon from '$lib/assets/favicon.svg';
     import homepageHero from '$lib/assets/homepage_hero.png';
     import { base } from '$app/paths';
+    import { goto } from '$app/navigation';
+    import { supabase } from '$lib/supabase';
+
+    async function handleAction(route) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            goto(`${base}/login`);
+        } else {
+            goto(`${base}${route}`);
+        }
+    }
 </script>
 
 <div class="font-display antialiased text-slate-900 bg-bg-main min-h-screen flex flex-col selection:bg-primary/10 selection:text-primary">
@@ -48,20 +59,20 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-                    <a href="{base}/client/dashboard" class="group relative flex h-14 items-center justify-center rounded-2xl bg-primary px-10 text-lg font-bold text-white shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
+                    <button onclick={() => handleAction('/client/dashboard')} class="group relative flex h-14 items-center justify-center rounded-2xl bg-primary px-10 text-lg font-bold text-white shadow-2xl shadow-primary/30 transition-all hover:scale-105 active:scale-95">
                         <span class="relative z-10 flex items-center gap-3">
                             Post your load
                             <span class="material-symbols-outlined text-[24px] transition-transform group-hover:rotate-12">package_2</span>
                         </span>
                         <div class="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-                    </a>
+                    </button>
                     
-                    <a href="{base}/driver/dashboard" class="moving-border h-14 rounded-2xl shadow-xl shadow-slate-200 micro-interaction">
+                    <button onclick={() => handleAction('/driver/dashboard')} class="moving-border h-14 rounded-2xl shadow-xl shadow-slate-200 micro-interaction">
                         <div class="moving-border-content px-10 gap-3 text-slate-700">
                              <span class="material-symbols-outlined text-[24px] text-primary">local_shipping</span>
                              <span class="text-lg font-bold">Pick up load</span>
                         </div>
-                    </a>
+                    </button>
                 </div>
 
                 <!-- Interactive Dashboard Preview -->
