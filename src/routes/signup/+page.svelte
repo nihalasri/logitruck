@@ -58,12 +58,15 @@
     async function handleGoogleSignup() {
         error = '';
         isGoogleLoading = true;
+        
+        // Save role for callback to pick up
+        localStorage.setItem('signup_role', role);
 
         try {
             const { data, error: authError } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/`
+                    redirectTo: `${window.location.origin}/auth/callback`
                 }
             });
 
