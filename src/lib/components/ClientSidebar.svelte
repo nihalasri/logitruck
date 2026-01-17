@@ -12,6 +12,7 @@
     const navItems = [
         { name: 'Home', icon: 'home', href: `${base}/` },
         { name: 'Dashboard', icon: 'dashboard', href: `${base}/client/dashboard` },
+        { name: 'Notifications', icon: 'notifications', href: `${base}/client/notifications` },
         { name: 'My Loads', icon: 'local_shipping', href: `${base}/client/loads` },
         { name: 'Bids', icon: 'gavel', href: `${base}/client/bids`, badge: '5' },
         { name: 'History', icon: 'history', href: `${base}/client/history` },

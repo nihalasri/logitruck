@@ -40,6 +40,7 @@
 
             if (data?.user && !data?.session) {
                 verificationSent = true;
+                startTimer();
             } else {
                 // Redirect based on role
                 if (role === 'driver') {
@@ -76,6 +77,83 @@
              isGoogleLoading = false;
         }
     }
+
+    // OTP Logic
+    let otpCode = $state('');
+    let otpError = $state('');
+    let timer = $state(300); // 5 minutes
+    let timerInterval;
+
+    function startTimer() {
+        timer = 300;
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (timer > 0) {
+                timer--;
+            } else {
+                clearInterval(timerInterval);
+            }
+        }, 1000);
+    }
+
+    async function handleVerifyOtp() {
+        otpError = '';
+        isLoading = true;
+        
+        try {
+            const { data, error } = await supabase.auth.verifyOtp({
+                email,
+                token: otpCode,
+                type: 'signup'
+            });
+
+            if (error) throw error;
+
+            // Handle metadata manually if needed, but usually verified session is enough
+            if (data.session) {
+                // Update profile just in case trigger didn't catch the metadata correctly
+                // or if we need to enforce roles post-verification
+                await supabase.auth.updateUser({
+                    data: { full_name: name, role: role }
+                });
+
+                if (role === 'driver') {
+                    goto(`${base}/driver/dashboard`);
+                } else {
+                    goto(`${base}/client/dashboard`);
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            otpError = err.message || 'Invalid code. Please try again.';
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    async function handleResend() {
+        isLoading = true;
+        try {
+            const { error } = await supabase.auth.resend({
+                type: 'signup',
+                email: email
+            });
+            
+            if (error) throw error;
+            startTimer();
+            otpCode = '';
+            otpError = '';
+        } catch (err) {
+             otpError = 'Failed to resend code: ' + err.message;
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    import { onDestroy } from 'svelte';
+    onDestroy(() => {
+        if (timerInterval) clearInterval(timerInterval);
+    });
 </script>
 
 <div class="font-display antialiased text-slate-900 bg-bg-main min-h-screen flex selection:bg-primary/10">
@@ -124,17 +202,54 @@
             </a>
 
             {#if verificationSent}
-                <div class="bg-emerald-50 rounded-3xl p-8 border border-emerald-100 text-center animate-fade-in">
-                    <div class="size-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                         <span class="material-symbols-outlined text-3xl">mark_email_read</span>
+                <div class="bg-white rounded-3xl p-8 border border-slate-100 text-center animate-fade-in space-y-6">
+                    <div class="size-16 bg-blue-50 text-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                         <span class="material-symbols-outlined text-3xl">lock_clock</span>
                     </div>
-                    <h2 class="text-2xl font-black text-slate-900 mb-2">Check your email</h2>
-                    <p class="text-slate-500 font-medium mb-8">
-                        We've sent a verification link to <span class="text-slate-900 font-bold">{email}</span>. Please click the link to activate your account.
-                    </p>
-                    <a href="{base}/login" class="inline-flex py-3 px-6 rounded-xl bg-slate-900 text-white font-bold text-sm hover:scale-105 transition-transform">
-                        Back to Sign In
-                    </a>
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900 mb-2">Verify your Email</h2>
+                        <p class="text-slate-500 font-medium text-sm">
+                            We've sent a verification code to <span class="text-slate-900 font-bold">{email}</span>. Please enter the code below.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="relative group">
+                            <span class="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-300 group-focus-within:text-primary transition-colors">key</span>
+                            <input 
+                                bind:value={otpCode} 
+                                type="text" 
+                                placeholder="Enter 6-digit code" 
+                                maxlength="6"
+                                class="w-full pl-14 pr-6 py-4 rounded-2xl bg-slate-50 border-none text-xl font-black tracking-widest text-center focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" 
+                            />
+                        </div>
+                        
+                        {#if otpError}
+                             <p class="text-xs font-black text-red-500 uppercase tracking-wide animate-shake">{otpError}</p>
+                        {/if}
+
+                        <button onclick={handleVerifyOtp} disabled={isLoading || otpCode.length !== 6} class="w-full h-[50px] rounded-xl bg-primary text-white font-black text-sm hover:bg-blue-600 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                            {#if isLoading}
+                                VERIFYING...
+                            {:else}
+                                Verify & Continue
+                            {/if}
+                        </button>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-6">
+                        {#if timer > 0}
+                             <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                Code expires in <span class="text-slate-900 font-black">{Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}</span>
+                             </p>
+                        {:else}
+                            <p class="text-xs font-bold text-red-500 uppercase tracking-widest mb-2">Code Expired</p>
+                            <button onclick={handleResend} class="text-xs font-black text-primary hover:underline uppercase tracking-wider">
+                                Resend Verification Code
+                            </button>
+                        {/if}
+                    </div>
                 </div>
             {:else}
                 <div class="mb-10">

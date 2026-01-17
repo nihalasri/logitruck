@@ -15,6 +15,7 @@
   // Data
   let liveShipments = $state([]);
   let activeBids = $state([]); // Would fetch specific bids in real impl
+  let userProfile = $state(null);
   
   // Dashboard Stats
   let dashboardStats = $derived([
@@ -39,6 +40,27 @@
       try {
           const { data: { user } } = await supabase.auth.getUser();
           if (!user) return;
+
+          // Default Profile from Auth Data (Fallbacks)
+          const meta = user.user_metadata || {};
+          userProfile = {
+              id: user.id,
+              full_name: meta.full_name || meta.name || user.email?.split('@')[0] || 'User',
+              avatar_url: meta.avatar_url || meta.picture || null,
+              role: meta.role || 'client'
+          };
+
+          // Try to fetch detailed profile from DB
+          const { data: profileData } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle(); // Use maybeSingle to avoid error on 0 rows
+          
+          // If DB profile exists, it takes precedence
+          if (profileData) {
+              userProfile = { ...userProfile, ...profileData };
+          }
 
           // Fetch Client's Loads
           const { data: loads, error } = await supabase
@@ -145,17 +167,27 @@
             </div>
 
             <div class="flex items-center gap-6">
-                <button class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-all micro-interaction">
+                <button onclick={() => goto('/client/notifications')} class="relative p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-all micro-interaction cursor-pointer">
                     <span class="material-symbols-outlined text-[22px]">notifications</span>
                     <span class="absolute top-2.5 right-2.5 h-2 w-2 rounded-full bg-primary ring-2 ring-white"></span>
                 </button>
-                <div class="flex items-center gap-3 pl-4 border-l border-slate-200 group cursor-pointer">
+                <div 
+                    class="flex items-center gap-3 pl-4 border-l border-slate-200 group cursor-pointer"
+                    onclick={() => goto('/client/profile')}
+                    role="button"
+                    tabindex="0"
+                    onkeydown={(e) => e.key === 'Enter' && goto('/client/profile')}
+                >
                     <div class="flex flex-col items-end hidden sm:flex">
-                        <span class="text-sm font-bold leading-tight group-hover:text-primary transition-colors">Nathan Wright</span>
-                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Premium User</span>
+                        <span class="text-sm font-bold leading-tight group-hover:text-primary transition-colors">{userProfile?.full_name || 'Loading...'}</span>
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">{userProfile?.role === 'client' ? 'Client Account' : (userProfile?.role || 'User')}</span>
                     </div>
                     <div class="h-10 w-10 rounded-xl overflow-hidden ring-2 ring-slate-100 group-hover:ring-primary/20 transition-all shadow-sm">
-                        <img alt="User Avatar" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk1CgNlJV18_q29KbXBf8ln6HSnqfA-YzBNnf7JKoU7dYliOHYJtFhXuqR5CI5oQ1xB4e5kRizYPL-8iXm_wyFef4hltUdYqo5GSwjctgtyC1KmU3iS2_A6MntpBhUW7m6Z-b6Iu4uGyXvJdlmrLZ5BMBXyYcvBY_huYGi6d1tRX6rBYClpLei-YhoYKwFau4HZbNs7dT54pPwLUPH3v3SvQm3b_Enxkkl_h_lG6UOUScmaPgmlbwF5BWk5ewswLMlj7VDUYYfVAw"/>
+                        <img 
+                            alt="User Avatar" 
+                            class="h-full w-full object-cover" 
+                            src={userProfile?.avatar_url || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'}
+                        />
                     </div>
                 </div>
             </div>

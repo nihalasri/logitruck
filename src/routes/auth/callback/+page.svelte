@@ -10,8 +10,13 @@
         if (session) {
             handleSession(session);
         } else {
+            const timeout = setTimeout(() => {
+                goto(`${base}/login`);
+            }, 4000);
+
             const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
                 if (session) {
+                    clearTimeout(timeout);
                     handleSession(session);
                 }
             });
@@ -20,28 +25,29 @@
 
     async function handleSession(session) {
         let role = session.user.user_metadata.role;
-        
-        // Check if we have a pending role assignment from signup
         const intendedRole = localStorage.getItem('signup_role');
         
-        if (!role && intendedRole) {
+        if (intendedRole || !role) {
+            const newRole = intendedRole || 'client';
+            
             try {
-                // Update user metadata with the selected role
-                const { data, error } = await supabase.auth.updateUser({
-                    data: { role: intendedRole }
+                // Update auth metadata
+                await supabase.auth.updateUser({
+                    data: { role: newRole }
                 });
+
+                // Update profiles table
+                await supabase
+                    .from('profiles')
+                    .update({ role: newRole })
+                    .eq('id', session.user.id);
                 
-                if (!error && data.user) {
-                    role = intendedRole;
-                }
+                role = newRole;
             } catch (err) {
                 console.error('Error updating role:', err);
             }
-            // Clear the stored role
-            localStorage.removeItem('signup_role');
-        } else if (!role) {
-            // Default to client if no role and no intended role
-            role = 'client';
+            
+            if (intendedRole) localStorage.removeItem('signup_role');
         }
 
         // Redirect based on role

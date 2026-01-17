@@ -8,6 +8,11 @@
       role text check (role in ('client', 'driver', 'admin')),
       company_name text,
       avatar_url text,
+      phone text,
+      location text,
+      license_number text,
+      truck_model text,
+      license_plate text,
       created_at timestamp with time zone default timezone('utc'::text, now()) not null
     );
 
@@ -178,3 +183,26 @@
     create policy "Users can view their own payments"
     on public.payments for select 
     using (auth.uid() = payer_id or auth.uid() = payee_id);
+
+    -- 9. NOTIFICATIONS
+    create table public.notifications (
+      id uuid default uuid_generate_v4() primary key,
+      user_id uuid references public.profiles(id) not null,
+      title text not null,
+      message text not null,
+      type text default 'info', -- 'info', 'success', 'warning', 'error'
+      is_read boolean default false,
+      created_at timestamp with time zone default timezone('utc'::text, now()) not null
+    );
+
+    -- Enable RLS for notifications
+    alter table public.notifications enable row level security;
+
+    create policy "Users can view their own notifications"
+    on public.notifications for select 
+    using (auth.uid() = user_id);
+
+    create policy "System can insert notifications"
+    on public.notifications for insert
+    with check (true); -- Ideally restrict this, but for now allow all (e.g. from edge functions or triggers)
+

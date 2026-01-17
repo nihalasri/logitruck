@@ -12,6 +12,7 @@
     const navItems = [
         { name: 'Home', icon: 'home', href: `${base}/` },
         { name: 'Dashboard', icon: 'dashboard', href: `${base}/driver/dashboard` },
+        { name: 'Notifications', icon: 'notifications', href: `${base}/driver/notifications` },
         { name: 'Available Loads', icon: 'local_shipping', href: `${base}/driver/loads` },
         { name: 'My Bids', icon: 'gavel', href: `${base}/driver/bids` },
         { name: 'History', icon: 'history', href: `${base}/driver/history` },

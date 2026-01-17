@@ -18,6 +18,7 @@
       if (user) {
           currentUser = user;
           fetchActiveJob(user.id);
+          captureLocation(); // Request location permission immediately
       }
   });
 
@@ -126,6 +127,7 @@
           alert('Failed to complete delivery. Check console.');
       }
   }
+</script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
     <DriverSidebar activePage="dashboard" />
@@ -148,7 +150,7 @@
                     <span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span class="text-[10px] font-black uppercase tracking-widest text-emerald-600">Working Now</span>
                 </div>
-                <button class="relative p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-primary transition-all micro-interaction">
+                <button onclick={() => goto('/driver/notifications')} class="relative p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:text-primary transition-all micro-interaction">
                     <span class="material-symbols-outlined">notifications</span>
                     <span class="absolute top-2 right-2 size-2 rounded-full bg-red-500"></span>
                 </button>
