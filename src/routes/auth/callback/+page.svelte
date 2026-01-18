@@ -4,56 +4,72 @@
     import { base } from '$app/paths';
     import { supabase } from '$lib/supabase';
 
-    onMount(async () => {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (session) {
-            handleSession(session);
-        } else {
-            const timeout = setTimeout(() => {
-                goto(`${base}/login`);
-            }, 4000);
+    let status = $state('Authenticating...');
 
-            const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-                if (session) {
-                    clearTimeout(timeout);
-                    handleSession(session);
-                }
-            });
+    onMount(async () => {
+        try {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
+            if (session) {
+                await handleSession(session);
+            } else {
+                // Listen for the auth state change (OAuth redirect handling)
+                const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+                    if (event === 'SIGNED_IN' && session) {
+                        await handleSession(session);
+                    }
+                });
+
+                // Failsafe timeout
+                setTimeout(() => {
+                   if (status === 'Authenticating...') { // Only if still stuck
+                       status = 'Redirecting to login...';
+                       goto(`${base}/login`);
+                   }
+                }, 5000);
+            }
+        } catch (e) {
+            console.error("Auth Error:", e);
+            goto(`${base}/login`);
         }
     });
 
     async function handleSession(session) {
-        let role = session.user.user_metadata.role;
-        const intendedRole = localStorage.getItem('signup_role');
-        
-        if (intendedRole || !role) {
-            const newRole = intendedRole || 'client';
+        status = 'Setting up profile...';
+        try {
+            let role = session.user.user_metadata?.role;
+            const intendedRole = localStorage.getItem('signup_role');
             
-            try {
-                // Update auth metadata
-                await supabase.auth.updateUser({
+            // If we have an intended role (from signup) or no role yet, update it
+            if (intendedRole || !role) {
+                const newRole = intendedRole || 'client'; // Default to client
+                
+                // 1. Update Supabase Auth Metadata
+                const { error: updateError } = await supabase.auth.updateUser({
                     data: { role: newRole }
                 });
+                if (updateError) console.error("Update User Error:", updateError);
 
-                // Update profiles table
-                await supabase
+                // 2. Update Profiles Table (Best effort)
+                const { error: profileError } = await supabase
                     .from('profiles')
                     .update({ role: newRole })
                     .eq('id', session.user.id);
+                if (profileError) console.error("Profile Update Error:", profileError);
                 
                 role = newRole;
-            } catch (err) {
-                console.error('Error updating role:', err);
+                if (intendedRole) localStorage.removeItem('signup_role');
             }
-            
-            if (intendedRole) localStorage.removeItem('signup_role');
-        }
 
-        // Redirect based on role
-        if (role === 'driver') {
-            goto(`${base}/driver/dashboard`);
-        } else {
+            status = 'Redirecting...';
+            if (role === 'driver') {
+                await goto(`${base}/driver/dashboard`);
+            } else {
+                await goto(`${base}/client/dashboard`);
+            }
+        } catch (err) {
+            console.error('Critical Session Error:', err);
+            // Fallback redirect
             goto(`${base}/client/dashboard`);
         }
     }
@@ -63,7 +79,7 @@
     <div class="flex flex-col items-center gap-6">
         <div class="size-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>
         <div class="text-center">
-            <p class="text-slate-900 font-black text-lg mb-1">Authenticating</p>
+            <p class="text-slate-900 font-black text-lg mb-1">{status}</p>
             <p class="text-slate-500 font-medium text-sm">Please wait while we sign you in...</p>
         </div>
     </div>
