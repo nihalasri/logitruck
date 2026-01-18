@@ -28,6 +28,7 @@
   // Documents
   let documents = $state([]);
   let isUploading = $state(false);
+  let isSidebarOpen = $state(false);
 
   onMount(async () => {
       await fetchProfile();
@@ -190,13 +191,13 @@
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="profile" />
+    <DriverSidebar activePage="profile" bind:mobileOpen={isSidebarOpen} />
     
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-4 lg:hidden">
-                <button class="text-slate-600 hover:text-primary transition-colors">
+                <button onclick={() => isSidebarOpen = true} class="text-slate-600 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
                 <span class="text-xl font-black tracking-tight">LogiTruck</span>

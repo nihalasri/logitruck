@@ -12,6 +12,7 @@
   let formattedLocation = $state('');
   let deliveryOtp = $state('');
   let currentUser = $state(null);
+  let isSidebarOpen = $state(false);
 
   onMount(async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -130,13 +131,16 @@
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="dashboard" />
+    <DriverSidebar activePage="dashboard" bind:mobileOpen={isSidebarOpen} />
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-4">
-                <a href="/" class="p-2 rounded-xl text-slate-400 hover:text-primary transition-all micro-interaction">
+                <button onclick={() => isSidebarOpen = true} class="lg:hidden p-2 -ml-2 mr-2 text-slate-500 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a href="/" class="hidden lg:block p-2 rounded-xl text-slate-400 hover:text-primary transition-all micro-interaction">
                     <span class="material-symbols-outlined">home</span>
                 </a>
                 <div class="w-px h-6 bg-slate-200"></div>

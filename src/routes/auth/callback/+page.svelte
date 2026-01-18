@@ -40,22 +40,20 @@
             let role = session.user.user_metadata?.role;
             const intendedRole = localStorage.getItem('signup_role');
             
-            // If we have an intended role (from signup) or no role yet, update it
-            if (intendedRole || !role) {
+            // Optimization: If role already matches intended role, skip updates
+            if (intendedRole && role === intendedRole) {
+                localStorage.removeItem('signup_role');
+            } else if (intendedRole || !role) {
                 const newRole = intendedRole || 'client'; // Default to client
                 
-                // 1. Update Supabase Auth Metadata
-                const { error: updateError } = await supabase.auth.updateUser({
-                    data: { role: newRole }
-                });
-                if (updateError) console.error("Update User Error:", updateError);
+                // execute updates in parallel for speed
+                const [authUpdate, profileUpdate] = await Promise.all([
+                    supabase.auth.updateUser({ data: { role: newRole } }),
+                    supabase.from('profiles').update({ role: newRole }).eq('id', session.user.id)
+                ]);
 
-                // 2. Update Profiles Table (Best effort)
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .update({ role: newRole })
-                    .eq('id', session.user.id);
-                if (profileError) console.error("Profile Update Error:", profileError);
+                if (authUpdate.error) console.error("Update User Error:", authUpdate.error);
+                if (profileUpdate.error) console.error("Profile Update Error:", profileUpdate.error);
                 
                 role = newRole;
                 if (intendedRole) localStorage.removeItem('signup_role');

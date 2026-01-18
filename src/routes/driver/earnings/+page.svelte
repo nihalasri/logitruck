@@ -8,15 +8,19 @@
     { id: 'TX-9411', date: 'Jan 05, 2024', amount: '$5,900', type: 'Load Completion', status: 'Deposited', loadId: 'L-8615' },
     { id: 'TX-9200', date: 'Jan 01, 2024', amount: '$500', type: 'Safety Bonus', status: 'Deposited', loadId: 'N/A' },
   ];
+  let isSidebarOpen = $state(false);
 </script>
 
 <div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="earnings" />
+    <DriverSidebar activePage="earnings" bind:mobileOpen={isSidebarOpen} />
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-4">
-                <a href="/driver/dashboard" class="p-2 rounded-xl text-slate-400 hover:text-primary transition-all micro-interaction">
+                <button onclick={() => isSidebarOpen = true} class="lg:hidden p-2 -ml-2 text-slate-500 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <a href="/driver/dashboard" class="hidden lg:block p-2 rounded-xl text-slate-400 hover:text-primary transition-all micro-interaction">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </a>
                 <div class="w-px h-6 bg-slate-200"></div>
@@ -59,7 +63,8 @@
                             <div class="p-6 border-b border-slate-100 bg-slate-50/50">
                                 <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Transaction Ledger</h3>
                             </div>
-                            <table class="w-full text-left border-collapse">
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
                                 <thead class="bg-slate-50 border-b border-slate-100">
                                     <tr>
                                         <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">Transaction Type</th>
@@ -97,6 +102,7 @@
                                     {/each}
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
 

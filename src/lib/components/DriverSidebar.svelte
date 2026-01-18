@@ -3,7 +3,7 @@
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
 
-    let { activePage = '' } = $props();
+    let { activePage = '', mobileOpen = $bindable(false) } = $props();
 
     function handleLogout() {
         goto(`${base}/login`);
@@ -21,7 +21,16 @@
     ];
 </script>
 
-<aside class="hidden lg:flex flex-col w-72 h-full border-r border-slate-200 bg-white shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+{#if mobileOpen}
+    <!-- Backdrop -->
+    <div 
+        role="presentation"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+        onclick={() => mobileOpen = false}
+    ></div>
+{/if}
+
+<aside class="{mobileOpen ? 'fixed inset-y-0 left-0 z-50 translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 lg:static lg:flex hidden'} transform transition-transform duration-300 ease-in-out flex flex-col h-full border-r border-slate-200 bg-white shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
     <div class="p-8">
         <a href="/" class="flex items-center gap-4 group cursor-pointer decoration-none">
             <div class="relative">
