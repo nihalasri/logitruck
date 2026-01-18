@@ -9,6 +9,56 @@
   let date = $state('');
   let shipmentType = $state('pallets');
   let isSubmitted = $state(false);
+  let gettingLocation = $state(false);
+
+  function getLiveLocation() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    gettingLocation = true;
+    
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    };
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      
+      try {
+        // Reverse geocoding using OpenStreetMap Nominatim
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        
+        if (!response.ok) throw new Error('Geocoding failed');
+        
+        const data = await response.json();
+        const addr = data.address;
+        
+        // prioritized location name
+        const locationName = addr.city || addr.town || addr.village || addr.suburb || addr.municipality || data.display_name.split(',')[0];
+        
+        pickup = locationName;
+        
+      } catch (error) {
+        console.error('Error fetching address:', error);
+        pickup = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+      } finally {
+        gettingLocation = false;
+      }
+    }, (error) => {
+      console.error('Error getting location:', error);
+      let msg = 'Unable to retrieve location.';
+      if (error.code === 1) msg = 'Please enable location access.';
+      
+      alert(msg);
+      gettingLocation = false;
+    }, options);
+  }
 
   async function handleSubmit(e) {
     if (e) e.preventDefault();
@@ -115,11 +165,23 @@
                                         <span class="block text-[10px] font-black uppercase tracking-widest text-slate-400">Pickup Area</span>
                                         <button type="button" class="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Select Saved Location</button>
                                     </div>
-                                    <div class="relative group">
-                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors">
-                                            <span class="material-symbols-outlined text-[20px]">my_location</span>
+      <div class="relative group">
+                                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors pointer-events-none">
+                                            <span class="material-symbols-outlined text-[20px]">trip_origin</span>
                                         </div>
-                                        <input bind:value={pickup} class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Pickup City or Zip" type="text"/>
+                                        <input bind:value={pickup} class="w-full pl-12 pr-14 py-4 rounded-2xl bg-slate-50 border-none placeholder-slate-300 text-sm font-bold focus:bg-white focus:ring-2 focus:ring-primary/20 transition-all shadow-inner" placeholder="Pickup City or Zip" type="text"/>
+                                        
+                                        <button 
+                                            type="button" 
+                                            onclick={getLiveLocation}
+                                            class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl hover:bg-white hover:shadow-sm text-slate-400 hover:text-primary transition-all active:scale-95"
+                                            title="Use my current location">
+                                            {#if gettingLocation}
+                                                <span class="material-symbols-outlined text-[20px] animate-spin">progress_activity</span>
+                                            {:else}
+                                                <span class="material-symbols-outlined text-[20px] {pickup ? 'text-emerald-500' : ''}">my_location</span>
+                                            {/if}
+                                        </button>
                                     </div>
                                 </label>
                                 <div class="grid grid-cols-2 gap-4">

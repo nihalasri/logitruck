@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
     import { supabase } from '$lib/supabase';
@@ -8,6 +9,13 @@
     let error = $state('');
     let isLoading = $state(false);
     let isGoogleLoading = $state(false);
+
+    onMount(async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            console.log(user.email);
+        }
+    });
 
     async function handleLogin(e) {
         e.preventDefault();
@@ -112,7 +120,7 @@
 
             <div class="space-y-6">
                 <!-- Google Sign In Button -->
-                <button onclick={handleGoogleLogin} disabled={isGoogleLoading || isLoading} class="w-full h-[60px] rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center justify-center gap-3 transition-all micro-interaction group disabled:opacity-50">
+                <button id="googleLogin" onclick={handleGoogleLogin} disabled={isGoogleLoading || isLoading} class="w-full h-[60px] rounded-2xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm flex items-center justify-center gap-3 transition-all micro-interaction group disabled:opacity-50">
                     {#if isGoogleLoading}
                       <span class="size-4 border-2 border-slate-300 border-t-slate-600 rounded-full animate-spin"></span>
                     {:else}
