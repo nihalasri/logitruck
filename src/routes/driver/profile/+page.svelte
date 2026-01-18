@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { supabase } from '$lib/supabase';
-  import DriverSidebar from '$lib/components/DriverSidebar.svelte';
+
   
   let user = $state({
       name: "",
@@ -190,8 +190,7 @@
     }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="profile" bind:mobileOpen={isSidebarOpen} />
+
     
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Header -->
@@ -200,7 +199,7 @@
                 <button onclick={() => isSidebarOpen = true} class="text-slate-600 hover:text-primary transition-colors">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
-                <span class="text-xl font-black tracking-tight">LogiTruck</span>
+                <a href="/" class="text-xl font-black tracking-tight text-slate-900">LogiTruck</a>
             </div>
             
             <div class="flex-1"></div> <!-- Spacer -->
@@ -429,4 +428,4 @@
             
         </div>
     </main>
-</div>
+

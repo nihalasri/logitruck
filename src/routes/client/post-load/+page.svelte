@@ -86,7 +86,7 @@
       pickup_date: date ? new Date(date).toISOString() : new Date().toISOString()
     };
 
-    console.log("Submitting load:", newLoad);
+
 
     try {
         const { data, error } = await supabase
@@ -113,7 +113,7 @@
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Section Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
-            <div class="flex items-center gap-2 text-sm font-medium text-slate-400">
+            <div class="flex items-center gap-2 text-sm font-medium text-slate-400 pl-14 lg:pl-0 transition-all">
                 <a class="hover:text-primary transition-colors" href="/client/dashboard">Home</a>
                 <span class="material-symbols-outlined text-[16px]">chevron_right</span>
                 <span class="text-slate-900 font-bold">New Shipment</span>

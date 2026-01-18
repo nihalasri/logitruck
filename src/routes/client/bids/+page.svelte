@@ -1,5 +1,5 @@
 <script>
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
   import { onMount } from 'svelte';
   import { page } from '$app/stores';
   import { walletBalance } from '$lib/stores/wallet';
@@ -54,7 +54,7 @@
   }
 
   function handleMenuAction(action, bid) {
-      console.log(`Action ${action} on bid ${bid.id}`);
+
       activeMenuId = null;
       // Implement specific action logic here
       if (action === 'call') alert(`Calling ${bid.driver} at ${bid.phone}...`);
@@ -110,13 +110,10 @@
     <div class="fixed inset-0 z-30 cursor-default" onclick={handleBackdropClick}></div>
 {/if}
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="bids" />
-
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
-            <div>
+            <div class="pl-14 lg:pl-0 transition-all">
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Market Proposals</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Live competitive matrix</p>
             </div>
@@ -409,4 +406,4 @@
         </div>
     </div>
     {/if}
-</div>
+

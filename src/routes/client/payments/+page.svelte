@@ -1,7 +1,7 @@
 <script>
     import { supabase } from '$lib/supabase';
     import { onMount } from 'svelte';
-    import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
     import { fade, fly } from 'svelte/transition';
     import { walletBalance, formatCurrency } from '$lib/stores/wallet';
 
@@ -95,17 +95,14 @@
     }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="payments" />
-
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
-            <div>
+            <div class="pl-14 lg:pl-0 transition-all">
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Financial Ledger</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Transaction audit trail</p>
             </div>
-            <button on:click={exportData} class="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 micro-interaction hover:bg-slate-800 transition-colors">
+            <button onclick={exportData} class="bg-slate-900 text-white px-6 py-2.5 rounded-xl text-sm font-black shadow-xl shadow-slate-200 micro-interaction hover:bg-slate-800 transition-colors">
                 Export Data
             </button>
         </header>
@@ -138,7 +135,7 @@
                             <h3 class="text-3xl font-black tracking-tight text-white">{formatCurrency($walletBalance)}</h3>
 
                          </div>
-                         <button on:click={() => showAddFundsModal = true} class="w-fit mt-auto bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider backdrop-blur-sm border border-white/10 micro-interaction transition-all">
+                         <button onclick={() => showAddFundsModal = true} class="w-fit mt-auto bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider backdrop-blur-sm border border-white/10 micro-interaction transition-all">
                              + Add Funds
                          </button>
                     </div>
@@ -167,7 +164,7 @@
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Active Promo</p>
                         <div class="flex items-center gap-2">
                             <input type="text" bind:value={promoCode} placeholder="CODE" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-black uppercase placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-primary transition-all text-white"/>
-                            <button on:click={applyPromo} class="bg-primary hover:bg-primary-hover px-4 py-3 rounded-xl text-white transition-colors flex items-center justify-center shadow-lg shadow-primary/25">
+                            <button onclick={applyPromo} class="bg-primary hover:bg-primary-hover px-4 py-3 rounded-xl text-white transition-colors flex items-center justify-center shadow-lg shadow-primary/25">
                                  <span class="material-symbols-outlined text-[18px]">check</span>
                             </button>
                         </div>
@@ -298,7 +295,7 @@
     <!-- Add Funds Modal -->
     {#if showAddFundsModal}
         <div class="fixed inset-0 z-50 flex items-center justify-center p-4" transition:fade>
-            <button class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-default w-full h-full border-none" on:click={() => showAddFundsModal = false} aria-label="Close modal"></button>
+            <button class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm cursor-default w-full h-full border-none" onclick={() => showAddFundsModal = false} aria-label="Close modal"></button>
             <div class="bg-white w-full max-w-md rounded-3xl p-8 relative z-10 shadow-2xl flex flex-col items-center" transition:fly={{ y: 20 }}>
                 <div class="size-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-3xl text-primary">add_card</span>
@@ -320,8 +317,8 @@
                 </div>
 
                 <div class="w-full grid grid-cols-2 gap-3 mt-8">
-                    <button on:click={() => showAddFundsModal = false} class="py-4 rounded-xl text-slate-500 font-bold text-sm bg-slate-100 hover:bg-slate-200 transition-colors">Cancel</button>
-                    <button on:click={handleAddFunds} disabled={isProcessing} class="py-4 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                    <button onclick={() => showAddFundsModal = false} class="py-4 rounded-xl text-slate-500 font-bold text-sm bg-slate-100 hover:bg-slate-200 transition-colors">Cancel</button>
+                    <button onclick={handleAddFunds} disabled={isProcessing} class="py-4 rounded-xl bg-primary text-white font-black text-sm hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
                         {#if isProcessing}
                             <div class="size-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></div>
                             Processing...
@@ -333,4 +330,4 @@
             </div>
         </div>
     {/if}
-</div>
+

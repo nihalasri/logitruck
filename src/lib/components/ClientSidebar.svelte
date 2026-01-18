@@ -36,7 +36,7 @@
         <div class="flex items-center gap-4 group cursor-pointer">
             <div class="relative">
                 <div class="absolute -inset-1 bg-gradient-to-tr from-primary to-blue-400 rounded-full blur opacity-20 group-hover:opacity-40 transition duration-500"></div>
-                <div class="relative bg-center bg-no-repeat bg-cover rounded-full h-12 w-12 border-2 border-white shadow-sm transition-transform duration-500 group-hover:scale-105" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIJ3dy42pCe7-4Pxe3nRz4Db986EU7HcnMdp2crVsXwmvDMsNzVLHGlhWRwXaMs-0UG5ePWWFSEnTmY2ZdrJwkGSzHWWnR4utv6hKFyiesq6l3hSWf0CMKPmpPDyGCvkGTJWGC8JcrUZZczR5xc_tzZvAkwYDYwA7T2ZgKl03EHpNaTjYHh71hMUlo_ViFdKxVs5agTIDp42P0cSwuG-xpAFVkniZ1LjORRuJoyJ8nvuyTbBBkZxgbnp5ge38wt9N8cQNkNUcrHIs");'></div>
+                <div class="relative bg-center bg-no-repeat bg-cover rounded-full h-12 w-12 border-2 border-white shadow-sm transition-transform duration-500 group-hover:scale-105" style='background-image: url("https://ui-avatars.com/api/?name=Logistics+Inc&background=random");'></div>
             </div>
             <div class="flex flex-col overflow-hidden">
                 <h1 class="text-slate-900 text-lg font-black leading-tight tracking-tight font-display">Logistics Inc.</h1>

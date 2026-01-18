@@ -1,6 +1,6 @@
 <script>
   import { goto } from '$app/navigation';
-  import DriverSidebar from '$lib/components/DriverSidebar.svelte';
+
   import { activeJob } from '$lib/stores/job.js';
   import { supabase } from '$lib/supabase';
   import { onMount } from 'svelte';
@@ -130,8 +130,7 @@
   }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="dashboard" bind:mobileOpen={isSidebarOpen} />
+
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <!-- Glassmorphism Header -->
@@ -533,4 +532,4 @@
             </div>
         </div>
     </main>
-</div>
+

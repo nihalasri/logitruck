@@ -144,7 +144,7 @@
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-4 lg:hidden">
                 <!-- Hamburger handled by Layout -->
-                <span class="text-xl font-black tracking-tight pl-12">LogiTruck</span>
+                <span class="text-xl font-black tracking-tight pl-16">LogiTruck</span>
             </div>
             
             <div class="hidden lg:flex flex-1 max-w-xl">

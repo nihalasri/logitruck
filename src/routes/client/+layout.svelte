@@ -26,13 +26,13 @@
     
     <!-- Mobile Menu Toggle (Floating Fallback) -->
     <!-- This ensures every page has a menu button on mobile, even if the page header forgot it -->
-    <div class="lg:hidden fixed top-5 left-4 z-50">
+    <div class="lg:hidden fixed top-5 left-4 z-50 transition-opacity duration-300 {sidebarState.isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}">
         <button 
             onclick={() => sidebarState.isOpen = true} 
-            class="p-2.5 bg-white/80 backdrop-blur-md border border-slate-200 rounded-xl shadow-lg text-slate-600 hover:text-primary transition-all active:scale-95"
+            class="p-2 text-slate-600 hover:text-primary transition-all active:scale-95"
             aria-label="Open Menu"
         >
-            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="material-symbols-outlined text-3xl">menu</span>
         </button>
     </div>
 

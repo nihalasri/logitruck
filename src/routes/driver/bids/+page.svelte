@@ -1,5 +1,5 @@
 <script>
-  import DriverSidebar from '$lib/components/DriverSidebar.svelte';
+
 
   const bids = [
     { id: 'L-9921', route: 'Miami Node', rate: '$3.20', total: '$3,840', status: 'In Review', color: 'text-blue-500', bg: 'bg-blue-50', date: '2024-01-10', weight: '15t', type: 'Dry Van' },
@@ -9,8 +9,7 @@
   ];
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="my bids" />
+
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
@@ -115,4 +114,4 @@
             </div>
         </div>
     </main>
-</div>
+

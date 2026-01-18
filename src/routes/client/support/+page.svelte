@@ -64,7 +64,7 @@
     <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
-            <div>
+            <div class="pl-14 lg:pl-0 transition-all">
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Global Concierge</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">24/7 Logistics Intelligence</p>
             </div>

@@ -1,15 +1,12 @@
 <script>
   import { goto } from '$app/navigation';
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="settings" />
-
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
-            <div>
+        <div class="pl-14 lg:pl-0 transition-all">
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight leading-none">Global Configurations</h2>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Infrastructure parameters</p>
             </div>
@@ -148,4 +145,4 @@
             </div>
         </div>
     </main>
-</div>
+

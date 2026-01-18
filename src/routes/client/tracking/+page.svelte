@@ -3,10 +3,11 @@
   import { goto } from '$app/navigation';
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex flex-col selection:bg-primary/10 overflow-hidden">
+
+<main class="flex-1 flex flex-col h-screen overflow-hidden relative w-full">
     <!-- Top Navigation Bar -->
     <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-4 h-20 shrink-0 z-40">
-        <a href="/" class="flex items-center gap-3 group cursor-pointer">
+        <a href="/" class="flex items-center gap-3 group cursor-pointer pl-14 lg:pl-0 transition-all">
             <div class="size-10 text-primary flex items-center justify-center bg-slate-50 rounded-xl border border-primary/5 transition-transform group-hover:scale-110">
                 <span class="material-symbols-outlined text-2xl font-black">deployed_code</span>
             </div>
@@ -32,7 +33,7 @@
 
         <div class="flex-1 flex overflow-hidden relative">
             <!-- Intelligent Map Interface -->
-            <main class="flex-1 relative bg-slate-50 overflow-hidden">
+            <div class="flex-1 relative bg-slate-50 overflow-hidden">
                 <!-- Live Satellite Map Layer -->
                 <div class="absolute inset-0 w-full h-full pointer-events-auto">
                     <iframe 
@@ -171,7 +172,7 @@
                         <span class="material-symbols-outlined text-[20px]">my_location</span>
                     </button>
                 </div>
-            </main>
+            </div>
             
             <!-- Operational Intel Panel -->
             <aside class="w-[420px] bg-white border-l border-slate-100 flex flex-col shrink-0 z-40 relative shadow-[-20px_0_40px_rgba(0,0,0,0.02)]">
@@ -281,5 +282,6 @@
                         </div>
                 </div>
             </aside>
-    </div>
-</div>
+        </div>
+    </main>
+

@@ -13,7 +13,7 @@
     onMount(async () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
-            console.log(user.email);
+
         }
     });
 

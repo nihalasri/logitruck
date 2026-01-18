@@ -1,5 +1,5 @@
 <script>
-  import DriverSidebar from '$lib/components/DriverSidebar.svelte';
+
 
   const faqs = [
     { q: 'How do I initiate emergency roadside support?', a: 'Use the "Tactical SOS" button in your dashboard or call the direct support line (found below) for immediate dispatch of recovery teams.' },
@@ -8,8 +8,7 @@
   ];
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <DriverSidebar activePage="support" />
+
 
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
@@ -110,4 +109,4 @@
             </div>
         </div>
     </main>
-</div>
+
