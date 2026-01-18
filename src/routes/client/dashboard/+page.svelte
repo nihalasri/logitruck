@@ -1,6 +1,5 @@
 <script>
   import { goto } from '$app/navigation';
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { walletBalance, formatCurrency } from '$lib/stores/wallet';
@@ -11,7 +10,6 @@
   let showToast = $state(false);
   let toastMessage = $state('');
   let isLoading = $state(true);
-  let isSidebarOpen = $state(false);
 
   // Data
   let liveShipments = $state([]);
@@ -140,18 +138,13 @@
   }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10 relative">
-    <ClientSidebar activePage="dashboard" bind:mobileOpen={isSidebarOpen} />
-    
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Top Navbar -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-4 lg:hidden">
-                <button onclick={() => isSidebarOpen = true} class="text-slate-600 hover:text-primary transition-colors">
-                    <span class="material-symbols-outlined">menu</span>
-                </button>
-                <span class="text-xl font-black tracking-tight">LogiTruck</span>
+                <!-- Hamburger handled by Layout -->
+                <span class="text-xl font-black tracking-tight pl-12">LogiTruck</span>
             </div>
             
             <div class="hidden lg:flex flex-1 max-w-xl">
@@ -433,4 +426,4 @@
             </div>
         {/if}
     </main>
-</div>
+

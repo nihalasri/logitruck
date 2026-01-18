@@ -1,5 +1,5 @@
 <script>
-    import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
     import { fade, fly, slide } from 'svelte/transition';
     import { goto } from '$app/navigation';
 
@@ -61,10 +61,7 @@
     }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="support" />
-
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div>
@@ -246,4 +243,4 @@
             </div>
         </div>
     {/if}
-</div>
+

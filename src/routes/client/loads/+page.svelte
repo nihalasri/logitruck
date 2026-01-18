@@ -1,6 +1,6 @@
 <script>
 
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
   import { loadsStore } from '$lib/stores/loads.js';
 
   let loads = $derived($loadsStore);
@@ -32,11 +32,7 @@
     <div class="fixed inset-0 z-30 cursor-default" onclick={handleBackdropClick} role="button" tabindex="0" onkeydown={e => e.key === 'Escape' && handleBackdropClick()}></div>
 {/if}
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="my loads" />
-
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div>
@@ -148,4 +144,4 @@
             </div>
         </div>
     </main>
-</div>
+

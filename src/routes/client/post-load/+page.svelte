@@ -1,7 +1,7 @@
 <script>
 
   import { goto } from '$app/navigation';
-  import ClientSidebar from '$lib/components/ClientSidebar.svelte';
+
   import { supabase } from '$lib/supabase';
 
   let pickup = $state('');
@@ -110,10 +110,7 @@
   }
 </script>
 
-<div class="bg-bg-main text-slate-900 font-display min-h-screen flex selection:bg-primary/10">
-    <ClientSidebar activePage="my loads" />
-
-    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Glassmorphism Section Header -->
         <header class="flex items-center justify-between glass border-b border-slate-200 px-8 py-5 h-20 shrink-0 z-20">
             <div class="flex items-center gap-2 text-sm font-medium text-slate-400">
@@ -360,4 +357,4 @@
             </div>
         </div>
     </main>
-</div>
+
