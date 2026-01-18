@@ -53,6 +53,7 @@
         {#each navItems as item}
             <a 
                 href={item.href}
+                onclick={() => mobileOpen = false}
                 class="group flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-300 micro-interaction {activePage === item.name.toLowerCase() ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'}"
             >
                 <div class="relative flex items-center justify-center">
@@ -82,6 +83,7 @@
         <div class="space-y-1">
             <a 
                 href="/driver/support"
+                onclick={() => mobileOpen = false}
                 class="group flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-300 micro-interaction {activePage === 'support' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-600 hover:bg-white hover:text-primary'}"
             >
                 <span class="material-symbols-outlined text-[24px] transition-transform group-hover:scale-110">support_agent</span>
@@ -89,6 +91,7 @@
             </a>
             <a 
                 href="/driver/settings"
+                onclick={() => mobileOpen = false}
                 class="group flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-300 micro-interaction {activePage === 'settings' ? 'bg-slate-900 text-white shadow-xl' : 'text-slate-600 hover:bg-white hover:text-primary'}"
             >
                 <span class="material-symbols-outlined text-[24px] transition-transform group-hover:rotate-45">settings</span>

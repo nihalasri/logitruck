@@ -60,13 +60,14 @@
             <div class="space-y-1.5 px-6 pb-8 pt-4">
                 {#each links as link}
                     <a href={link.href} 
+                       onclick={() => isOpen = false}
                        class="block px-4 py-3 rounded-2xl text-lg font-black transition-all {page.url.pathname === link.href ? 'text-primary bg-primary/5' : 'text-slate-600 hover:bg-slate-50'}">
                         {link.label}
                     </a>
                 {/each}
                 <div class="pt-4 flex flex-col gap-3">
-                    <a href="{base}/login" class="w-full text-center py-4 rounded-2xl bg-slate-50 text-slate-900 font-black text-lg">Log In</a>
-                    <a href="{base}/signup" class="w-full text-center py-4 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20">Get Started</a>
+                    <a href="{base}/login" onclick={() => isOpen = false} class="w-full text-center py-4 rounded-2xl bg-slate-50 text-slate-900 font-black text-lg">Log In</a>
+                    <a href="{base}/signup" onclick={() => isOpen = false} class="w-full text-center py-4 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20">Get Started</a>
                 </div>
             </div>
         </div>

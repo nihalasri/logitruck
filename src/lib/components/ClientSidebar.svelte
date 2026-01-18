@@ -3,7 +3,7 @@
     import { goto } from '$app/navigation';
     import { base } from '$app/paths';
 
-    let { activePage = '' } = $props();
+    let { activePage = '', mobileOpen = $bindable(false) } = $props();
 
     function handleLogout() {
         goto(`${base}/login`);
@@ -22,7 +22,16 @@
     ];
 </script>
 
-<aside class="hidden lg:flex flex-col w-72 h-full border-r border-slate-200 bg-white shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+{#if mobileOpen}
+    <!-- Backdrop -->
+    <div 
+        role="presentation"
+        class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+        onclick={() => mobileOpen = false}
+    ></div>
+{/if}
+
+<aside class="{mobileOpen ? 'fixed inset-y-0 left-0 z-50 translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 lg:static lg:flex hidden'} transform transition-transform duration-300 ease-in-out flex flex-col h-full border-r border-slate-200 bg-white shrink-0 shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
     <div class="p-8">
         <div class="flex items-center gap-4 group cursor-pointer">
             <div class="relative">
@@ -43,6 +52,7 @@
         {#each navItems as item}
             <a 
                 href={item.href}
+                onclick={() => mobileOpen = false}
                 class="group flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-300 micro-interaction {activePage === item.name.toLowerCase() ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'}"
             >
                 <span class="material-symbols-outlined text-[24px] transition-transform group-hover:scale-110">{item.icon}</span>
@@ -59,6 +69,7 @@
     <div class="p-6 border-t border-slate-100 bg-slate-50/50 space-y-1.5">
         <a 
             href="{base}/client/settings"
+            onclick={() => mobileOpen = false}
             class="group flex items-center gap-3.5 px-4 py-3 rounded-xl transition-all duration-300 micro-interaction {activePage === 'settings' ? 'bg-slate-900 text-white shadow-xl shadow-slate-200' : 'text-slate-700 hover:bg-white hover:text-primary hover:shadow-sm'}"
         >
             <span class="material-symbols-outlined text-[24px] transition-transform group-hover:rotate-45">settings</span>
@@ -73,3 +84,4 @@
         </button>
     </div>
 </aside>
+
